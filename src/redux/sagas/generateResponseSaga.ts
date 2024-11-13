@@ -3,8 +3,9 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import Groq from 'groq-sdk';
 import { UPDATE_FORM } from '../actions';
 import { updateResponse } from '../actions';
+import { configs } from '../../../config';
 
-const groq = new Groq({ apiKey: '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', dangerouslyAllowBrowser: true });
+const groq = new Groq({ apiKey: configs.groqApiKey, dangerouslyAllowBrowser: true });
 
 function* handleUpdateForm(action:any) {
   try {
