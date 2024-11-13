@@ -11,8 +11,7 @@ function App() {
             <h1 className="text-4xl font-bold text-gray-900">Tech Flow</h1>
           </div>
           <p className="text-xl text-gray-600">
-            You focus on the Application Development. We'll handle the to-do and
-            create the tasks for you!
+            Have an app idea? Let's lay down the development plan for you!
           </p>
         </div>
 

@@ -1,18 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProjectInput } from "../types";
 import { Lightbulb, Layers, Calendar, Clock } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/reducer";
 
 const InputForm: React.FC = () => {
-  const [input, setInput] = useState<ProjectInput>({
-    idea: "",
-    features: "",
-    techStack: "",
-    deadline: "",
-  });
+  const inputFormDetails = useSelector(
+    (state: RootState) => state.formInputReducer
+  );
 
+  const [input, setInput] = useState<ProjectInput>(
+    inputFormDetails.formInputState
+  );
+
+  const dispatch = useDispatch();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    //onSubmit(input);
+    dispatch({ type: "UPDATE_FORM", payload: input });
   };
 
   return (
@@ -31,7 +35,7 @@ const InputForm: React.FC = () => {
             }
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             rows={3}
-            placeholder="Describe your app idea..."
+            placeholder="Describe what you have in mind for your app idea..."
           />
         </div>
 
@@ -48,7 +52,7 @@ const InputForm: React.FC = () => {
             }
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             rows={3}
-            placeholder="List the main features..."
+            placeholder="List the main features you envision your app to perform..."
           />
         </div>
 
@@ -88,10 +92,9 @@ const InputForm: React.FC = () => {
 
       <button
         type="submit"
-        //disabled={isLoading}
         className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
-        Submit {/* {isLoading ? "Generating Tasks..." : "Generate Tasks"} */}
+        Submit
       </button>
     </form>
   );
