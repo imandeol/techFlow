@@ -1,7 +1,8 @@
 import { LinearClient } from "@linear/sdk";
+import { configs } from "../../config";
 
 const linearClient = new LinearClient({
-  apiKey: "YOUR_PERSONAL_API_KEY",
+  apiKey: configs.linearApiKey,
 });
 
 export default linearClient;
