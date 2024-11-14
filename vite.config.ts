@@ -8,11 +8,13 @@ export default defineConfig({
     react(),
     NodeGlobalsPolyfillPlugin({
       process: true,
+      buffer: true,
     }),
     NodeModulesPolyfillPlugin(),
   ],
   resolve: {
     alias: {
+      global: "globalThis",
       process: "process/browser",
     },
   },
@@ -24,6 +26,7 @@ export default defineConfig({
       plugins: [
         NodeGlobalsPolyfillPlugin({
           process: true,
+          buffer: true,
         }),
         NodeModulesPolyfillPlugin(),
       ],
