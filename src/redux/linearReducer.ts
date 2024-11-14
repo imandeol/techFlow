@@ -2,11 +2,11 @@ import { Issue } from "@linear/sdk";
 import { STORE_TASKS } from "./actions";
 
 interface IssuesState {
-  issues: Issue[];
+  issues: Issue[] | undefined;
 }
 
 const initialState: IssuesState = {
-  issues: [],
+  issues: undefined,
 };
 
 type IssuesAction = {

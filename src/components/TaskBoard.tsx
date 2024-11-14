@@ -10,7 +10,9 @@ import { navigateTo } from "../redux/navigate";
 const TaskBoard: React.FC = () => {
   const dispatch = useDispatch();
 
-  const issues: Issue[] = useSelector((state: RootState) => state.tasks.issues);
+  const issues: Issue[] | undefined = useSelector(
+    (state: RootState) => state.tasks.issues
+  );
 
   const fetchLinearTeamTasks = () => {
     dispatch({ type: FETCH_DATA_FROM_LINEAR });
@@ -27,7 +29,7 @@ const TaskBoard: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (issues.length > 0) setLoading(false);
+    if (issues && issues.length >= 0) setLoading(false);
   }, [issues]);
 
   return (
@@ -46,9 +48,8 @@ const TaskBoard: React.FC = () => {
           <Loader />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {issues.map((task) => (
-              <TaskCard key={task.id} task={task} />
-            ))}
+            {issues &&
+              issues.map((task) => <TaskCard key={task.id} task={task} />)}
             <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 cursor-pointer h-full flex flex-col items-center justify-center group">
               <Plus
                 size={48}

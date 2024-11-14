@@ -4,3 +4,9 @@ export interface ProjectInput {
   techStack: string;
   deadline: string;
 }
+
+export interface Task {
+  title: string;
+  description: string;
+  dueDate: string;
+}
