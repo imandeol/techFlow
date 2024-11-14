@@ -2,6 +2,7 @@ import { call, put, takeLatest } from "redux-saga/effects";
 import Groq from "groq-sdk";
 import { UPDATE_FORM } from "../actions";
 import { updateResponse } from "../actions";
+// @ts-ignore
 import { configs } from "../../../config";
 
 const groq = new Groq({
@@ -15,6 +16,7 @@ function* handleUpdateForm(action: any) {
 
     console.log("");
 
+    // @ts-ignore
     const chatCompletion = yield call([groq.chat.completions, "create"], {
       messages: [
         {
