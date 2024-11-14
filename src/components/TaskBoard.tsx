@@ -50,11 +50,13 @@ const TaskBoard: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {issues &&
               issues.map((task) => <TaskCard key={task.id} task={task} />)}
-            <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 cursor-pointer h-full flex flex-col items-center justify-center group">
+            <div
+              onClick={() => navigateToInputForm()}
+              className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 cursor-pointer h-full flex flex-col items-center justify-center group"
+            >
               <Plus
                 size={48}
                 className="text-blue-600 mb-4 group-hover:scale-110 transition-transform duration-300"
-                onClick={() => navigateToInputForm()}
               />
               <h3 className="text-xl font-semibold text-gray-800">
                 Create New Task
