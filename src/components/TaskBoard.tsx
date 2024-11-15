@@ -23,6 +23,8 @@ const TaskBoard: React.FC = () => {
   };
 
   const [isLoading, setLoading] = useState(true);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     fetchLinearTeamTasks();
@@ -31,8 +33,49 @@ const TaskBoard: React.FC = () => {
   useEffect(() => {
     if (issues && issues.length >= 0) {
       setLoading(false);
+      setTotalPages(issues.length > 0 ? Math.ceil(issues.length / 10) : 1);
     }
   }, [issues]);
+
+  const renderPaginationLinks = () => {
+    const links = [];
+    for (let i = 1; i <= totalPages; i++) {
+      links.push(
+        <a
+          key={i}
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            setCurrentPage(i);
+          }}
+          className={
+            currentPage === i ? "font-bold text-blue-600" : "text-gray-600"
+          }
+        >
+          {i}
+        </a>
+      );
+    }
+    return links;
+  };
+
+  const renderCurrentPageIssues = () => {
+    const issuesPerPage = 10;
+
+    const startIndex = (currentPage - 1) * issuesPerPage;
+    const endIndex = startIndex + issuesPerPage;
+
+    if (issues) {
+      const currentPageIssues = issues.slice(startIndex, endIndex);
+      return (
+        <>
+          {currentPageIssues.map((task) => (
+            <TaskCard key={task.id} task={task} />
+          ))}
+        </>
+      );
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -47,11 +90,13 @@ const TaskBoard: React.FC = () => {
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         {isLoading ? (
-          <Loader />
+          <div className="flex items-center space-x-2">
+            <span>Loading the Tasks</span>
+            <Loader />
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {issues &&
-              issues.map((task) => <TaskCard key={task.id} task={task} />)}
+            {issues && renderCurrentPageIssues()}
             <div
               onClick={() => navigateToInputForm()}
               className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 cursor-pointer h-full flex flex-col items-center justify-center group"
@@ -67,6 +112,9 @@ const TaskBoard: React.FC = () => {
           </div>
         )}
       </main>
+      <div className="flex justify-center items-center gap-x-4">
+        {renderPaginationLinks()}
+      </div>
     </div>
   );
 };

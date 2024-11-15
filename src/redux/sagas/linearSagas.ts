@@ -1,6 +1,7 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import {
   FETCH_DATA_FROM_LINEAR,
+  RESET_FORM,
   storeTasks,
   UPDATE_RESPONSE,
 } from "../actions";
@@ -36,17 +37,19 @@ export function* createTasksFromGroq(action: {
     };
   });
 
+  tasks.reverse();
+
   try {
     //@ts-ignore
     const response = yield call(axios.post, `${API_BASE_URL}/create`, {
       tasks,
     });
     if (response.data.success) {
-      console.log("Tasks created successfully:", response.data.data);
       yield call(navigateTo, "/");
       yield put(
         setToastSuccess("Successfully created Tasks for your App Idea")
       );
+      yield put({ type: RESET_FORM });
     } else {
       console.error("Error creating tasks:", response.data.error);
     }
@@ -60,7 +63,7 @@ export function* fetchDataFromLinear() {
     //@ts-ignore
     const response = yield call(axios.get, `${API_BASE_URL}/fetch`);
     if (response.data.success) {
-      yield put(storeTasks(response.data.data.reverse()));
+      yield put(storeTasks(response.data.data));
     } else {
       console.error("Error fetching tasks:", response.data.error);
     }

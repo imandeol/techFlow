@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProjectInput } from "../types";
 import { Lightbulb, Layers, Calendar, Clock, Loader2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +13,12 @@ const InputForm: React.FC = () => {
   const [input, setInput] = useState<ProjectInput>(
     inputFormDetails.formInputState
   );
+
+  const toastValue = useSelector((state: RootState) => state.toastValue);
+
+  useEffect(() => {
+    if (toastValue?.type === "failure") setIsLoading(false);
+  }, [toastValue]);
 
   const dispatch = useDispatch();
   const handleSubmit = (e: React.FormEvent) => {

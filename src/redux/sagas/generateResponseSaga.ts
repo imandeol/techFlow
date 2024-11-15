@@ -52,8 +52,6 @@ function* handleUpdateForm(action: any) {
       max_tokens: 4096,
     });
 
-    console.log(chatCompletion.choices[0].message.content);
-
     yield put(updateResponse(chatCompletion.choices[0].message.content));
   } catch (error) {
     console.error("Error fetching data from Groq:", error);
