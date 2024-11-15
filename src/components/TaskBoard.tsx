@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { FETCH_DATA_FROM_LINEAR } from "../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
-import { Issue } from "@linear/sdk";
 import { RootState } from "../redux/reducer";
 import { LayoutGrid, Loader, Plus } from "lucide-react";
 import TaskCard from "./TaskCard";
 import { navigateTo } from "../redux/navigate";
+import { Task } from "../types";
 
 const TaskBoard: React.FC = () => {
   const dispatch = useDispatch();
 
-  const issues: Issue[] | undefined = useSelector(
+  const issues: Task[] | undefined = useSelector(
     (state: RootState) => state.tasks.issues
   );
 
@@ -29,7 +29,7 @@ const TaskBoard: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (issues && issues.length >= 0) setLoading(false);
+    if (issues && issues.length >= 0) {setLoading(false); issues.reverse()}
   }, [issues]);
 
   return (

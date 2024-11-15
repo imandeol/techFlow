@@ -1,4 +1,4 @@
-import { Issue } from "@linear/sdk";
+import { Task } from "../types";
 
 export const UPDATE_FORM = "UPDATE_FORM";
 export const UPDATE_RESPONSE = "UPDATE_RESPONSE";
@@ -17,7 +17,7 @@ export const updateResponse = (payload: any) => ({
   payload,
 });
 
-export const storeTasks = (payload: Issue[]) => ({
+export const storeTasks = (payload: Task[]) => ({
   type: STORE_TASKS,
   payload,
 });

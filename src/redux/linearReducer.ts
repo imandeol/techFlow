@@ -1,8 +1,8 @@
-import { Issue } from "@linear/sdk";
+import { Task } from "../types";
 import { STORE_TASKS } from "./actions";
 
 interface IssuesState {
-  issues: Issue[] | undefined;
+  issues: Task[] | undefined;
 }
 
 const initialState: IssuesState = {
@@ -11,7 +11,7 @@ const initialState: IssuesState = {
 
 type IssuesAction = {
   type: string;
-  payload: Issue[];
+  payload: Task[];
 };
 
 const linearReducer = (

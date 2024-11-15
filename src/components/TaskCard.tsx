@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Calendar, X } from "lucide-react";
-import { Issue } from "@linear/sdk";
+import { Task } from "../types";
 
 interface TaskCardProps {
-  task: Issue;
+  task: Task;
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
@@ -21,7 +21,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
         <p className="text-gray-600 mb-4 line-clamp-5">{task.description}</p>
         <div className="flex items-center text-blue-600">
           <Calendar size={16} className="mr-2" />
-          <span className="text-sm">{task.dueDate}</span>
+          <span className="text-sm">Due Date - {task.dueDate}</span>
         </div>
       </div>
 
@@ -44,7 +44,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
             </div>
             <div className="flex items-center text-blue-600">
               <Calendar size={18} className="mr-2" />
-              <span>{task.dueDate}</span>
+              <span>Due Date - {task.dueDate}</span>
             </div>
           </div>
         </div>
