@@ -4,6 +4,7 @@ import { UPDATE_FORM } from "../actions";
 import { updateResponse } from "../actions";
 // @ts-ignore
 import { configs } from "../../../config";
+import { setToastFailure } from "../toastReducer";
 
 const groq = new Groq({
   apiKey: configs.groqApiKey,
@@ -17,7 +18,9 @@ function* handleUpdateForm(action: any) {
     const deadline = new Date(appIdea.deadline);
     const today = new Date();
     const differenceInMilliseconds = deadline.getTime() - today.getTime();
-    const differenceInDays = Math.ceil(differenceInMilliseconds / (1000 * 60 * 60 * 24));
+    const differenceInDays = Math.ceil(
+      differenceInMilliseconds / (1000 * 60 * 60 * 24)
+    );
 
     // @ts-ignore
     const chatCompletion = yield call([groq.chat.completions, "create"], {
@@ -54,6 +57,7 @@ function* handleUpdateForm(action: any) {
     yield put(updateResponse(chatCompletion.choices[0].message.content));
   } catch (error) {
     console.error("Error fetching data from Groq:", error);
+    yield put(setToastFailure("Error in generating tasks, kindly try again!"));
   }
 }
 

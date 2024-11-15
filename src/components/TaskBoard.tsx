@@ -29,7 +29,9 @@ const TaskBoard: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (issues && issues.length >= 0) {setLoading(false); issues.reverse()}
+    if (issues && issues.length >= 0) {
+      setLoading(false);
+    }
   }, [issues]);
 
   return (
@@ -38,7 +40,7 @@ const TaskBoard: React.FC = () => {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center space-x-3">
             <LayoutGrid size={28} />
-            <h1 className="text-2xl font-bold">Task Management Board</h1>
+            <h1 className="text-2xl font-bold">Task Board By Tech Flow</h1>
           </div>
         </div>
       </header>
