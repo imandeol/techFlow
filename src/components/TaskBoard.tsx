@@ -29,8 +29,10 @@ const TaskBoard: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
+    console.log("access token", access_token);
     if (!access_token) {
       const localAccessToken = getCookie("linearAccessToken");
+      console.log("local access token", localAccessToken);
       if (localAccessToken) {
         dispatch(loginSuccess(localAccessToken));
       } else navigateTo("/login");
