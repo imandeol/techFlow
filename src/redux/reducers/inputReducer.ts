@@ -1,5 +1,5 @@
-import { ProjectInput } from "../types";
-import { RESET_FORM, UPDATE_FORM } from "./actions";
+import { ProjectInput } from "../../types";
+import { RESET_FORM, UPDATE_FORM } from "../actions";
 
 interface State {
   formInputState: ProjectInput;

@@ -1,19 +1,26 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import {
   FETCH_DATA_FROM_LINEAR,
+  LOGIN,
+  LOGOUT,
   RESET_FORM,
+  setUserDetails,
   storeTasks,
   UPDATE_RESPONSE,
 } from "../actions";
 import { navigateTo } from "../navigate";
 import axios from "axios";
-import { setToastFailure, setToastSuccess } from "../toastReducer";
+import { setToastFailure, setToastSuccess } from "../reducers/toastReducer";
+import { clearSpecificCookie } from "../../utils";
+import store from "../store";
 
 const API_BASE_URL = "https://tech-flow-backend.vercel.app/api";
 
-export function* watchFetchDataFromLinear() {
+export function* watchActionRequests() {
   yield takeLatest(FETCH_DATA_FROM_LINEAR, fetchDataFromLinear);
   yield takeLatest(UPDATE_RESPONSE, createTasksFromGroq);
+  yield takeLatest(LOGOUT, handleLogOut);
+  yield takeLatest(LOGIN, fetchDataAfterLogin);
 }
 
 export function* createTasksFromGroq(action: {
@@ -40,10 +47,16 @@ export function* createTasksFromGroq(action: {
   tasks.reverse();
 
   try {
+    const state = store.getState();
+    const { teamId } = state.user;
+    const accessToken = state.auth.access_token;
     //@ts-ignore
     const response = yield call(axios.post, `${API_BASE_URL}/create`, {
       tasks,
+      teamId,
+      accessToken,
     });
+    //`http://localhost:3000/api/create`, {
     if (response.data.success) {
       yield call(navigateTo, "/");
       yield put(
@@ -58,10 +71,45 @@ export function* createTasksFromGroq(action: {
   }
 }
 
+export function* handleLogOut() {
+  yield call(clearSpecificCookie, "linearAccessToken");
+  localStorage.removeItem("teamId");
+  yield call(navigateTo, "/");
+}
+
+export function* fetchDataAfterLogin(action: {
+  type: typeof LOGIN;
+  payload: string;
+}) {
+  try {
+    const data = yield call(
+      axios.post,
+      `${API_BASE_URL}/getLinearData`,
+      //"http://localhost:3000/api/getLinearData",
+      {
+        accessToken: action.payload,
+      }
+    );
+    const { user, teamId } = data.data;
+    localStorage.setItem("teamId", teamId);
+    yield put(setUserDetails(user, teamId));
+    yield put({ type: FETCH_DATA_FROM_LINEAR });
+  } catch (error) {
+    console.error("Failed to fetch Linear data:", error);
+  }
+}
+
 export function* fetchDataFromLinear() {
   try {
+    const state = store.getState();
+    const teamId = state.user.teamId || localStorage.getItem("teamId");
+    const accessToken = state.auth.access_token;
     //@ts-ignore
-    const response = yield call(axios.get, `${API_BASE_URL}/fetch`);
+    const response = yield call(axios.post, `${API_BASE_URL}/fetch`, {
+      teamId,
+      accessToken,
+    });
+    //"http://localhost:3000/api/fetch"
     if (response.data.success) {
       yield put(storeTasks(response.data.data));
     } else {

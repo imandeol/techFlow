@@ -1,4 +1,4 @@
-import { RESET_RESPONSE, UPDATE_RESPONSE } from "./actions";
+import { RESET_RESPONSE, UPDATE_RESPONSE } from "../actions";
 
 interface groqResponseState {
   data: any;

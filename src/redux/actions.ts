@@ -9,6 +9,38 @@ export const RESET_RESPONSE = "RESET_RESPONSE";
 export const SET_SUCCESS = "SET_SUCCESS";
 export const SET_FAILURE = "SET_FAILURE";
 export const RESET_TOAST = "RESET_TOAST";
+export const LOGIN_REQUEST = "auth/LOGIN_REQUEST";
+export const LOGOUT = "auth/LOGOUT";
+export const LOGIN = "auth/LOGIN";
+export const SET_USER_DETAILS = "SET_USER_DETAILS";
+
+interface LoginRequestAction {
+  type: typeof LOGIN_REQUEST;
+}
+
+interface LoginAction {
+  type: typeof LOGIN;
+  payload: string;
+}
+
+interface LogOutAction {
+  type: typeof LOGOUT;
+}
+
+export type AuthActionTypes = LoginRequestAction | LoginAction | LogOutAction;
+
+export const loginRequest = (): AuthActionTypes => ({
+  type: LOGIN_REQUEST,
+});
+
+export const loginSuccess = (access_token: string): AuthActionTypes => ({
+  type: LOGIN,
+  payload: access_token,
+});
+
+export const logout = (): AuthActionTypes => ({
+  type: LOGOUT,
+});
 
 export const updateForm = (payload: any) => ({
   type: UPDATE_FORM,
@@ -24,3 +56,25 @@ export const storeTasks = (payload: Task[]) => ({
   type: STORE_TASKS,
   payload,
 });
+
+interface SetUserDetailsAction {
+  type: typeof SET_USER_DETAILS;
+  payload: {
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+    teamId: string;
+  };
+}
+
+export const setUserDetails = (
+  user: { id: string; name: string; email: string },
+  teamId: string
+): UserActionTypes => ({
+  type: SET_USER_DETAILS,
+  payload: { user, teamId },
+});
+
+export type UserActionTypes = SetUserDetailsAction;

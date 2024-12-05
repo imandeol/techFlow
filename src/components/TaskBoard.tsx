@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { FETCH_DATA_FROM_LINEAR } from "../redux/actions";
+import { FETCH_DATA_FROM_LINEAR, loginSuccess } from "../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/reducer";
 import { LayoutGrid, Loader, Plus } from "lucide-react";
 import TaskCard from "./TaskCard";
 import { navigateTo } from "../redux/navigate";
 import { Task } from "../types";
+import { getCookie } from "../utils";
 
 const TaskBoard: React.FC = () => {
   const dispatch = useDispatch();
@@ -14,6 +15,7 @@ const TaskBoard: React.FC = () => {
     (state: RootState) => state.tasks.issues
   );
 
+  const { access_token } = useSelector((state: RootState) => state.auth);
   const fetchLinearTeamTasks = () => {
     dispatch({ type: FETCH_DATA_FROM_LINEAR });
   };
@@ -27,7 +29,14 @@ const TaskBoard: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    fetchLinearTeamTasks();
+    if (!access_token) {
+      const localAccessToken = getCookie("linearAccessToken");
+      if (localAccessToken) {
+        dispatch(loginSuccess(localAccessToken));
+      } else navigateTo("/login");
+    } else {
+      dispatch(loginSuccess(access_token));
+    }
   }, []);
 
   useEffect(() => {
@@ -80,7 +89,7 @@ const TaskBoard: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-blue-600 text-white py-6 px-4 shadow-lg">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-3">
             <LayoutGrid size={28} />
             <h1 className="text-2xl font-bold">Task Board By Tech Flow</h1>

@@ -7,6 +7,9 @@ import toast, { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { RESET_TOAST } from "./redux/actions";
 import { RootState } from "./redux/reducer";
+import { LoginPage } from "./components/LoginPage";
+import { Layout } from "./components/Layout";
+import { SidebarProvider } from "./components/SidebarContext";
 
 function App() {
   const navigate = useNavigate();
@@ -56,14 +59,29 @@ function App() {
   }, [toastValue, isToastHandled, dispatch]);
 
   return (
-    <>
+    <SidebarProvider>
       <Toaster position="top-right" />
       <Routes>
-        <Route path={"/"} element={<TaskBoard />} />
-        <Route path={"/input-form"} element={<InputForm />} />
-        <Route path="*" element={<TaskBoard />} />
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/input-form"
+          element={
+            <Layout>
+              <InputForm />
+            </Layout>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <Layout>
+              <TaskBoard />
+            </Layout>
+          }
+        />
       </Routes>
-    </>
+    </SidebarProvider>
   );
 }
 

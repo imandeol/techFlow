@@ -3,6 +3,7 @@ import { ProjectInput } from "../types";
 import { Lightbulb, Layers, Calendar, Clock, Loader2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/reducer";
+import { navigateTo } from "../redux/navigate";
 
 const InputForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -10,6 +11,7 @@ const InputForm: React.FC = () => {
     (state: RootState) => state.formInputReducer
   );
 
+  const { access_token } = useSelector((state: RootState) => state.auth);
   const [input, setInput] = useState<ProjectInput>(
     inputFormDetails.formInputState
   );
@@ -20,6 +22,11 @@ const InputForm: React.FC = () => {
     if (toastValue?.type === "failure") setIsLoading(false);
   }, [toastValue]);
 
+  useEffect(() => {
+    if (!access_token) {
+      navigateTo("/login");
+    }
+  }, []);
   const dispatch = useDispatch();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
