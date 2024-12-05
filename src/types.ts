@@ -12,3 +12,10 @@ export interface Task {
   dueDate: string;
   daysRequired: number;
 }
+
+export type AuthType = "login" | "signup";
+
+export interface AuthState {
+  isLoggedIn: boolean;
+  access_token: string | null;
+}

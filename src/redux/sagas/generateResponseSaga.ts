@@ -4,7 +4,7 @@ import { UPDATE_FORM } from "../actions";
 import { updateResponse } from "../actions";
 // @ts-ignore
 import { configs } from "../../../config";
-import { setToastFailure } from "../toastReducer";
+import { setToastFailure } from "../reducers/toastReducer";
 
 const groq = new Groq({
   apiKey: configs.groqApiKey,

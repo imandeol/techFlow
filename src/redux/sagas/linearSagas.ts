@@ -1,19 +1,24 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import {
   FETCH_DATA_FROM_LINEAR,
+  LOGIN_REQUEST,
+  loginSuccess,
+  LOGOUT,
   RESET_FORM,
   storeTasks,
   UPDATE_RESPONSE,
 } from "../actions";
 import { navigateTo } from "../navigate";
 import axios from "axios";
-import { setToastFailure, setToastSuccess } from "../toastReducer";
+import { setToastFailure, setToastSuccess } from "../reducers/toastReducer";
+import { clearSpecificCookie } from "../../utils";
 
 const API_BASE_URL = "https://tech-flow-backend.vercel.app/api";
 
-export function* watchFetchDataFromLinear() {
+export function* watchActionRequests() {
   yield takeLatest(FETCH_DATA_FROM_LINEAR, fetchDataFromLinear);
   yield takeLatest(UPDATE_RESPONSE, createTasksFromGroq);
+  yield takeLatest(LOGOUT, handleLogOut);
 }
 
 export function* createTasksFromGroq(action: {
@@ -58,6 +63,10 @@ export function* createTasksFromGroq(action: {
   }
 }
 
+export function* handleLogOut() {
+  yield call(clearSpecificCookie, "linearAccessToken");
+  yield call(navigateTo, "/");
+}
 export function* fetchDataFromLinear() {
   try {
     //@ts-ignore

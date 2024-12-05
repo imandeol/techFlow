@@ -9,6 +9,37 @@ export const RESET_RESPONSE = "RESET_RESPONSE";
 export const SET_SUCCESS = "SET_SUCCESS";
 export const SET_FAILURE = "SET_FAILURE";
 export const RESET_TOAST = "RESET_TOAST";
+export const LOGIN_REQUEST = "auth/LOGIN_REQUEST";
+export const LOGOUT = "auth/LOGOUT";
+export const LOGIN = "auth/LOGIN";
+
+interface LoginRequestAction {
+  type: typeof LOGIN_REQUEST;
+}
+
+interface LoginAction {
+  type: typeof LOGIN;
+  payload: string;
+}
+
+interface LogOutAction {
+  type: typeof LOGOUT;
+}
+
+export type AuthActionTypes = LoginRequestAction | LoginAction | LogOutAction;
+
+export const loginRequest = (): AuthActionTypes => ({
+  type: LOGIN_REQUEST,
+});
+
+export const loginSuccess = (access_token: string): AuthActionTypes => ({
+  type: LOGIN,
+  payload: access_token,
+});
+
+export const logout = (): AuthActionTypes => ({
+  type: LOGOUT,
+});
 
 export const updateForm = (payload: any) => ({
   type: UPDATE_FORM,

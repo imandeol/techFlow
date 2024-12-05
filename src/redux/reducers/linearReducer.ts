@@ -1,5 +1,5 @@
-import { Task } from "../types";
-import { STORE_TASKS } from "./actions";
+import { Task } from "../../types";
+import { STORE_TASKS } from "../actions";
 
 interface IssuesState {
   issues: Task[] | undefined;

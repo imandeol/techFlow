@@ -1,4 +1,4 @@
-import { SET_SUCCESS, SET_FAILURE, RESET_TOAST } from "./actions";
+import { SET_SUCCESS, SET_FAILURE, RESET_TOAST } from "../actions";
 
 interface SuccessAction {
   type: typeof SET_SUCCESS;
