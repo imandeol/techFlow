@@ -35,7 +35,7 @@ const TaskBoard: React.FC = () => {
         dispatch(loginSuccess(localAccessToken));
       } else navigateTo("/login");
     } else {
-      fetchLinearTeamTasks();
+      dispatch(loginSuccess(access_token));
     }
   }, []);
 

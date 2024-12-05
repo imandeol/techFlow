@@ -12,6 +12,7 @@ export const RESET_TOAST = "RESET_TOAST";
 export const LOGIN_REQUEST = "auth/LOGIN_REQUEST";
 export const LOGOUT = "auth/LOGOUT";
 export const LOGIN = "auth/LOGIN";
+export const SET_USER_DETAILS = "SET_USER_DETAILS";
 
 interface LoginRequestAction {
   type: typeof LOGIN_REQUEST;
@@ -55,3 +56,25 @@ export const storeTasks = (payload: Task[]) => ({
   type: STORE_TASKS,
   payload,
 });
+
+interface SetUserDetailsAction {
+  type: typeof SET_USER_DETAILS;
+  payload: {
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+    teamId: string;
+  };
+}
+
+export const setUserDetails = (
+  user: { id: string; name: string; email: string },
+  teamId: string
+): UserActionTypes => ({
+  type: SET_USER_DETAILS,
+  payload: { user, teamId },
+});
+
+export type UserActionTypes = SetUserDetailsAction;
