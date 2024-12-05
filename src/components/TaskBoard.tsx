@@ -7,9 +7,11 @@ import TaskCard from "./TaskCard";
 import { navigateTo } from "../redux/navigate";
 import { Task } from "../types";
 import { getCookie } from "../utils";
+import { redirect, useSearchParams } from "react-router-dom";
 
 const TaskBoard: React.FC = () => {
   const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
 
   const issues: Task[] | undefined = useSelector(
     (state: RootState) => state.tasks.issues
@@ -31,11 +33,11 @@ const TaskBoard: React.FC = () => {
   useEffect(() => {
     console.log("access token", access_token);
     if (!access_token) {
-      const localAccessToken = getCookie("linearAccessToken");
-      console.log("local access token", localAccessToken);
-      if (localAccessToken) {
-        dispatch(loginSuccess(localAccessToken));
-      } else navigateTo("/login");
+      const accessToken = searchParams.get("accessToken");
+      console.log("local access token", accessToken);
+      if (accessToken) {
+        dispatch(loginSuccess(accessToken));
+      } else redirect("/login");
     } else {
       dispatch(loginSuccess(access_token));
     }
