@@ -18,7 +18,8 @@ export function LoginPage() {
 
   const handleAuth = (type: AuthType) => {
     dispatch(loginRequest(type));
-    window.location.href = "http://localhost:3000/api/login";
+    window.location.href =
+      "https://https://tech-flow-backend.vercel.app/api/login";
   };
 
   return (
