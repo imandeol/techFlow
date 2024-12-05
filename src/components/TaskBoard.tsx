@@ -30,7 +30,10 @@ const TaskBoard: React.FC = () => {
 
   useEffect(() => {
     if (!access_token) {
-      navigateTo("/login");
+      const localAccessToken = getCookie("linearAccessToken");
+      if (localAccessToken) {
+        dispatch(loginSuccess(localAccessToken));
+      } else navigateTo("/login");
     } else {
       fetchLinearTeamTasks();
     }

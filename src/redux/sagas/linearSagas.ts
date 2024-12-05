@@ -85,11 +85,13 @@ export function* handleLogOut() {
   yield call(navigateTo, "/");
 }
 
-function* startOAuthSaga() {
+function* startOAuthSaga(action: AuthActionTypes) {
   const { linearClientId, redirectUri } = configs;
-  window.location.href = `https://linear.app/oauth/authorize?client_id=${linearClientId}&redirect_uri=${encodeURIComponent(
+  const authUrl = `https://linear.app/oauth/authorize?client_id=${linearClientId}&redirect_uri=${encodeURIComponent(
     redirectUri
   )}&response_type=code&scope=write,admin`;
+  if (action.payload < 2) window.open(authUrl, "_blank");
+  else window.location.href = authUrl;
 }
 
 function* handleCallbackSaga(action: AuthActionTypes) {

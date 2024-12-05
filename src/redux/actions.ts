@@ -27,6 +27,7 @@ export const handleCallback = (code: string): HandleCallbackAction => ({
 
 interface LoginRequestAction {
   type: typeof LOGIN_REQUEST;
+  payload: number;
 }
 
 interface LoginAction {
@@ -44,8 +45,9 @@ export type AuthActionTypes =
   | LoginAction
   | LogOutAction;
 
-export const loginRequest = (): AuthActionTypes => ({
+export const loginRequest = (loginButtonClicked: number): AuthActionTypes => ({
   type: LOGIN_REQUEST,
+  payload: loginButtonClicked,
 });
 
 export const loginSuccess = (access_token: string): AuthActionTypes => ({

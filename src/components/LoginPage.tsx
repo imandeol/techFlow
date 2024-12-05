@@ -2,22 +2,38 @@ import { LogIn } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/reducer";
 import { AuthActionTypes, loginRequest } from "../redux/actions";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { navigateTo } from "../redux/navigate";
 import { Dispatch } from "@reduxjs/toolkit";
+import { getCookie } from "../utils";
 
 export function LoginPage() {
   const dispatch: Dispatch<AuthActionTypes> = useDispatch();
   const { access_token } = useSelector((state: RootState) => state.auth);
+  const [loginButtonClicked, setLoginButtonClicked] = useState(0);
 
   useEffect(() => {
-    if (access_token) {
-      navigateTo("/dashboard");
+    const navigateToDashboard = () => navigateTo("/dashboard");
+    const localAccessToken = getCookie("linearAccessToken");
+    if (access_token || localAccessToken) {
+      navigateToDashboard();
     }
-  }, []);
+    const interval = setInterval(() => {
+      const localAccessToken = getCookie("linearAccessToken");
+      console.log(localAccessToken);
+      if (localAccessToken) {
+        navigateToDashboard();
+        clearInterval(interval);
+      }
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [navigateTo, access_token]);
 
   const handleAuth = () => {
-    dispatch(loginRequest());
+    const localAccessToken = getCookie("linearAccessToken");
+    if (access_token || localAccessToken) {
+      navigateTo("/dashboard");
+    } else dispatch(loginRequest(loginButtonClicked));
   };
 
   return (
@@ -38,20 +54,12 @@ export function LoginPage() {
           <button
             className="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
             onClick={() => {
+              setLoginButtonClicked(loginButtonClicked + 1);
               handleAuth();
             }}
           >
             <LogIn className="w-5 h-5 mr-2" />
             Login with Linear
-          </button>
-
-          <button
-            className="w-full flex items-center justify-center px-4 py-2 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-gray-200 transition-colors"
-            onClick={() => {
-              window.open("https://linear.app/login", "_blank");
-            }}
-          >
-            Sign up first with Linear
           </button>
         </div>
 
