@@ -1,13 +1,13 @@
 import { LogIn } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/reducer";
-import { AuthType } from "../types";
-import { loginRequest } from "../redux/actions";
+import { AuthActionTypes, loginRequest } from "../redux/actions";
 import { useEffect } from "react";
 import { navigateTo } from "../redux/navigate";
+import { Dispatch } from "@reduxjs/toolkit";
 
 export function LoginPage() {
-  const dispatch = useDispatch();
+  const dispatch: Dispatch<AuthActionTypes> = useDispatch();
   const { access_token } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
@@ -16,9 +16,8 @@ export function LoginPage() {
     }
   }, []);
 
-  const handleAuth = (type: AuthType) => {
-    dispatch(loginRequest(type));
-    window.location.href = "https://tech-flow-backend.vercel.app/api/login";
+  const handleAuth = () => {
+    dispatch(loginRequest());
   };
 
   return (
@@ -39,7 +38,7 @@ export function LoginPage() {
           <button
             className="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
             onClick={() => {
-              handleAuth("login");
+              handleAuth();
             }}
           >
             <LogIn className="w-5 h-5 mr-2" />

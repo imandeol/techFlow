@@ -13,8 +13,6 @@ export interface Task {
   daysRequired: number;
 }
 
-export type AuthType = "login" | "signup";
-
 export interface AuthState {
   isLoggedIn: boolean;
   access_token: string | null;

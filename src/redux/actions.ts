@@ -13,6 +13,17 @@ export const LOGIN_REQUEST = "auth/LOGIN_REQUEST";
 export const LOGOUT = "auth/LOGOUT";
 export const LOGIN = "auth/LOGIN";
 export const SET_USER_DETAILS = "SET_USER_DETAILS";
+export const HANDLE_CALLBACK = "HANDLE_CALLBACK";
+
+export interface HandleCallbackAction {
+  type: typeof HANDLE_CALLBACK;
+  payload: string;
+}
+
+export const handleCallback = (code: string): HandleCallbackAction => ({
+  type: HANDLE_CALLBACK,
+  payload: code,
+});
 
 interface LoginRequestAction {
   type: typeof LOGIN_REQUEST;
@@ -27,7 +38,11 @@ interface LogOutAction {
   type: typeof LOGOUT;
 }
 
-export type AuthActionTypes = LoginRequestAction | LoginAction | LogOutAction;
+export type AuthActionTypes =
+  | HandleCallbackAction
+  | LoginRequestAction
+  | LoginAction
+  | LogOutAction;
 
 export const loginRequest = (): AuthActionTypes => ({
   type: LOGIN_REQUEST,

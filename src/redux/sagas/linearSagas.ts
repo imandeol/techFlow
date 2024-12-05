@@ -1,7 +1,11 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import {
+  AuthActionTypes,
   FETCH_DATA_FROM_LINEAR,
+  HANDLE_CALLBACK,
   LOGIN,
+  LOGIN_REQUEST,
+  loginSuccess,
   LOGOUT,
   RESET_FORM,
   setUserDetails,
@@ -12,6 +16,8 @@ import { navigateTo } from "../navigate";
 import axios from "axios";
 import { setToastFailure, setToastSuccess } from "../reducers/toastReducer";
 import { clearSpecificCookie } from "../../utils";
+//@ts-ignore
+import { configs } from "../../../config";
 import store from "../store";
 
 const API_BASE_URL = "https://tech-flow-backend.vercel.app/api";
@@ -21,6 +27,8 @@ export function* watchActionRequests() {
   yield takeLatest(UPDATE_RESPONSE, createTasksFromGroq);
   yield takeLatest(LOGOUT, handleLogOut);
   yield takeLatest(LOGIN, fetchDataAfterLogin);
+  yield takeLatest(LOGIN_REQUEST, startOAuthSaga);
+  yield takeLatest(HANDLE_CALLBACK, handleCallbackSaga);
 }
 
 export function* createTasksFromGroq(action: {
@@ -77,6 +85,54 @@ export function* handleLogOut() {
   yield call(navigateTo, "/");
 }
 
+function* startOAuthSaga() {
+  const { linearClientId, redirectUri } = configs;
+  window.location.href = `https://linear.app/oauth/authorize?client_id=${linearClientId}&redirect_uri=${encodeURIComponent(
+    redirectUri
+  )}&response_type=code&scope=write,admin`;
+}
+
+function* handleCallbackSaga(action: AuthActionTypes) {
+  try {
+    if (action.type === HANDLE_CALLBACK) {
+      const code = action.payload;
+
+      const { linearClientSecret, linearClientId, redirectUri } = configs;
+      //@ts-ignore
+      const response = yield call(
+        axios.post,
+        "https://api.linear.app/oauth/token",
+        {
+          client_id: linearClientId,
+          client_secret: linearClientSecret,
+          code,
+          redirect_uri: redirectUri,
+          grant_type: "authorization_code",
+        },
+        {
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        }
+      );
+
+      const data = response.data;
+
+      if (response.status === 200 && data.access_token) {
+        const expirationDays = 7;
+        const expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + expirationDays);
+        document.cookie = `linearAccessToken=${
+          data.access_token
+        }; path=/; expires=${expirationDate.toUTCString()};SameSite=Lax`;
+        yield put(loginSuccess(data.access_token));
+      } else {
+        throw new Error(data.error || "OAuth failed");
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export function* fetchDataAfterLogin(action: {
   type: typeof LOGIN;
   payload: string;
@@ -93,7 +149,7 @@ export function* fetchDataAfterLogin(action: {
     const { user, teamId } = data.data;
     localStorage.setItem("teamId", teamId);
     yield put(setUserDetails(user, teamId));
-    yield put({ type: FETCH_DATA_FROM_LINEAR });
+    navigateTo("/dashboard");
   } catch (error) {
     console.error("Failed to fetch Linear data:", error);
   }

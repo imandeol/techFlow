@@ -10,6 +10,7 @@ import { RootState } from "./redux/reducer";
 import { LoginPage } from "./components/LoginPage";
 import { Layout } from "./components/Layout";
 import { SidebarProvider } from "./components/SidebarContext";
+import CallbackHandler from "./components/CallbackHandler";
 
 function App() {
   const navigate = useNavigate();
@@ -63,6 +64,7 @@ function App() {
       <Toaster position="top-right" />
       <Routes>
         <Route path="/" element={<LoginPage />} />
+        <Route path="/callback" element={<CallbackHandler />} />
         <Route path="/login" element={<LoginPage />} />
         <Route
           path="/input-form"
