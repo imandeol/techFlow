@@ -51,7 +51,7 @@ export function LoginPage() {
               window.open("https://linear.app/login", "_blank");
             }}
           >
-            Sign up with Linear
+            Sign up first with Linear
           </button>
         </div>
 
