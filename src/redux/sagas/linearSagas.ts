@@ -207,14 +207,9 @@ export function* fetchDataAfterLogin(action: {
   payload: string;
 }) {
   try {
-    const data = yield call(
-      axios.post,
-      // `${API_BASE_URL}/getLinearData`,
-      "http://localhost:3000/api/getLinearData",
-      {
-        accessToken: action.payload,
-      }
-    );
+    const data = yield call(axios.post, `${API_BASE_URL}/getLinearData`, {
+      accessToken: action.payload,
+    });
     const { user, teamId } = data.data;
     localStorage.setItem("teamId", teamId);
     localStorage.setItem("user", JSON.stringify(user));
@@ -235,7 +230,6 @@ export function* fetchDataFromLinearAndCreateLogs() {
       teamId,
       accessToken,
     });
-    //"http://localhost:3000/api/fetch"
     if (response.data.success) {
       yield put(storeTasks(response.data.data));
       const tasks = response.data.data;
@@ -282,15 +276,10 @@ export function* updateLinearTaskSaga(action: {
 }) {
   try {
     const state = store.getState();
-    const data = yield call(
-      axios.post,
-      // `${API_BASE_URL}/getLinearData`,
-      "http://localhost:3000/api/updateTask",
-      {
-        ...action.payload,
-        accessToken: state.auth.access_token || getCookie("linearAccessToken"),
-      }
-    );
+    const data = yield call(axios.post, `${API_BASE_URL}/updateTask`, {
+      ...action.payload,
+      accessToken: state.auth.access_token || getCookie("linearAccessToken"),
+    });
     yield put(updateTaskSuccess(data.data.success));
   } catch (error) {
     console.error("Failed to fetch Linear data:", error);
@@ -303,16 +292,14 @@ export function* fetchDataFromLinear() {
     const teamId = state.user.teamId || localStorage.getItem("teamId");
     const accessToken = state.auth.access_token;
     //@ts-ignore
-    const response = yield call(axios.post, "http://localhost:3000/api/fetch", {
-      // `${API_BASE_URL}/fetch`,{
+    const response = yield call(axios.post, `${API_BASE_URL}/fetch`, {
       teamId,
       accessToken,
     });
     const teamresponse = yield call(
       axios.post,
-      "http://localhost:3000/api/team-members",
+      `${API_BASE_URL}/team-members`,
       {
-        // `${API_BASE_URL}/fetch`,{
         teamId,
         accessToken,
       }
