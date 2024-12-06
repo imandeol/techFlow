@@ -53,7 +53,10 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
   const [isSaving, setIsSaving] = useState(false);
 
   React.useEffect(() => {
-    if (!task.assignee) {
+    if (
+      !task.assignee &&
+      !teamMembersList.some((member) => member.id === "")
+    ) {
       setTeamMembersList([
         {
           id: "",
@@ -63,7 +66,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
         ...teamMembersList,
       ]);
     }
-  }, [task]);
+  }, [task, teamMembersList]);
 
   const handleAssigneeChange = (id: string) => {
     setSelectedAssignee(id);

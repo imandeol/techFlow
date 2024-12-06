@@ -149,9 +149,7 @@ function* startOAuthSaga() {
   const oauth_url = `https://linear.app/oauth/authorize?client_id=${linearClientId}&redirect_uri=${encodeURIComponent(
     redirectUri
   )}&response_type=code&scope=read,write,admin`;
-  window.location.href = `https://linear.app/login?redirectTo=${encodeURIComponent(
-    oauth_url
-  )}`;
+  window.location.href = oauth_url;
 }
 
 function* handleCallbackSaga(action: AuthActionTypes) {
@@ -275,13 +273,47 @@ export function* updateLinearTaskSaga(action: {
 }) {
   try {
     const state = store.getState();
+    const currentTask = state?.tasks?.issues?.find((task: any) => task.id === action.payload.taskId);
+    const workflowStates = state?.workflow?.workflowStates;
+    const teamMembers = JSON.parse(localStorage.getItem('teamMembers') || '[]');
+    
+    const getCurrentAssigneeName = (id: string | null) => {
+      if (!id) return 'Unassigned';
+      const member = teamMembers?.find((m: any) => m.id === id);
+      return member ? member.name : 'Unassigned';
+    };
+
+    const getStatusName = (statusId: string) => {
+      const state = workflowStates.find((s: any) => s.id === statusId);
+      return state ? state.value : statusId;
+    };
+
     const data = yield call(axios.post, `${API_BASE_URL}/updateTask`, {
       ...action.payload,
       accessToken: state.auth.access_token || getCookie("linearAccessToken"),
     });
+    
     yield put(updateTaskSuccess(data.data.success));
+
+    const logData = {
+      team_id: state.user.teamId,
+      task_id: action.payload.taskId,
+      log_type: 'TASK_UPDATED' as const,
+      details: {
+        title: currentTask?.title,
+        prevAssignee: getCurrentAssigneeName(currentTask?.assignee ?? ''),
+        newAssignee: getCurrentAssigneeName(action.payload.assigneeId),
+        prevStatus: getStatusName(currentTask?.status ?? ''),
+        newStatus: getStatusName(action?.payload?.status),
+        prevDescription: currentTask?.description,
+        newDescription: action.payload.description,
+        updatedAt: new Date().toISOString()
+      }
+    };
+    
+    yield call(() => loggingService.createLog(logData));
   } catch (error) {
-    console.error("Failed to fetch Linear data:", error);
+    console.error("Failed to update task:", error);
   }
 }
 
