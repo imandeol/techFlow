@@ -11,6 +11,7 @@ import { LoginPage } from "./components/LoginPage";
 import { Layout } from "./components/Layout";
 import { SidebarProvider } from "./components/SidebarContext";
 import CallbackHandler from "./components/CallbackHandler";
+import { ViewLogs } from "./components/ViewLogs";
 
 function App() {
   const navigate = useNavigate();
@@ -66,6 +67,14 @@ function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/callback" element={<CallbackHandler />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/logs"
+          element={
+            <Layout>
+              <ViewLogs />
+            </Layout>
+          }
+        />
         <Route
           path="/input-form"
           element={
