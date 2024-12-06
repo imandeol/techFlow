@@ -4,12 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/reducer";
 import { LayoutGrid, Loader, Plus } from "lucide-react";
 import TaskCard from "./TaskCard";
-import { navigateTo } from "../redux/navigate";
 import { Task } from "../types";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const TaskBoard: React.FC = () => {
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   const issues: Task[] | undefined = useSelector(
     (state: RootState) => state.tasks.issues
@@ -21,7 +22,7 @@ const TaskBoard: React.FC = () => {
   };
 
   const navigateToInputForm = () => {
-    navigateTo("/input-form");
+    navigate("/input-form");
   };
 
   const [isLoading, setLoading] = useState(true);
@@ -30,11 +31,11 @@ const TaskBoard: React.FC = () => {
 
   useEffect(() => {
     if (!access_token) {
-      navigateTo("/login");
+      navigate("/login");
     } else {
       fetchLinearTeamTasks();
     }
-  }, [navigateTo]);
+  }, [navigate]);
 
   useEffect(() => {
     if (issues && issues.length >= 0) {

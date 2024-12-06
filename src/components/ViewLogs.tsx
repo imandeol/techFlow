@@ -1,17 +1,17 @@
-// src/pages/LogsPage.tsx
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { loggingService, TaskLog } from "../services/loggingService";
 import { format, parseISO } from "date-fns";
 import { Loader2 } from "lucide-react";
 import { RootState } from "../redux/reducer";
-import { navigateTo } from "../redux/navigate";
+import { useNavigate } from "react-router-dom";
 
 interface GroupedLogs {
   [date: string]: TaskLog[];
 }
 
 export function ViewLogs() {
+  const navigate = useNavigate();
   const [logs, setLogs] = useState<TaskLog[]>([]);
   const [loading, setLoading] = useState(true);
   const teamId = useSelector((state: any) => state.user.teamId);
@@ -20,9 +20,9 @@ export function ViewLogs() {
 
   useEffect(() => {
     if (!access_token) {
-      navigateTo("/login");
+      navigate("/login");
     }
-  }, [navigateTo]);
+  }, [navigate]);
 
   useEffect(() => {
     const fetchLogs = async () => {

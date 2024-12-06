@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { User } from "lucide-react";
 import { RootState } from "../redux/reducer";
 import { useSelector } from "react-redux";
-import { navigateTo } from "../redux/navigate";
+import { useNavigate } from "react-router-dom";
 
 const TeamTab: React.FC = () => {
   const teamMembers = useSelector(
@@ -11,11 +11,13 @@ const TeamTab: React.FC = () => {
 
   const { access_token } = useSelector((state: RootState) => state.auth);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (!access_token) {
-      navigateTo("/login");
+      navigate("/login");
     }
-  }, [navigateTo]);
+  }, [navigate]);
 
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
