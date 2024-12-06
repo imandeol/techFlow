@@ -35,6 +35,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
 
   useEffect(() => {
     setIsSaving(false);
+    setIsModalOpen(false);
     dispatch(updateTaskSuccess(false));
   }, [updateTaskStatus]);
 
@@ -85,7 +86,6 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
 
   const handleDueDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDueDate(e.target.value);
-    setIsEditingDueDate(false);
   };
 
   const handleTaskSave = async () => {
@@ -167,7 +167,13 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
             onClick={(e) => e.stopPropagation()}
           >
             <button
-              onClick={() => setIsModalOpen(false)}
+              onClick={() => {
+                setSelectedAssignee(task.assignee);
+                setStatusOfTask(task.status);
+                setDueDate(task.dueDate);
+                setDescription(task.description);
+                setIsModalOpen(false);
+              }}
               className="absolute right-4 top-4 text-gray-500 hover:text-gray-700"
               disabled={isSaving}
             >

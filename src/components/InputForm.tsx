@@ -132,6 +132,16 @@ const InputForm: React.FC = () => {
                       }))
                     }
                     min={new Date().toISOString().split("T")[0]}
+                    onInvalid={(e) => {
+                      const target = e.target as HTMLInputElement;
+                      target.setCustomValidity(
+                        "Please select a date that is today or later."
+                      );
+                    }}
+                    onInput={(e) => {
+                      const target = e.target as HTMLInputElement;
+                      target.setCustomValidity("");
+                    }}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>

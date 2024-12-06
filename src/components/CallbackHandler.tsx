@@ -45,7 +45,7 @@ const CallbackHandler: React.FC = () => {
           Getting you into TechFlow...
         </h1>
         <p className="mt-2 text-gray-600">
-          Please wait a moment while we process your Linear Authorization.
+          Please wait a moment while we confirm your Linear Authorization.
         </p>
       </div>
     </div>

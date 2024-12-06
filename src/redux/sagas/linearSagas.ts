@@ -211,6 +211,9 @@ export function* fetchDataAfterLogin(action: {
     localStorage.setItem("teamId", teamId);
     localStorage.setItem("user", JSON.stringify(user));
     yield put(setUserDetails(user, teamId));
+    yield put(
+      setToastSuccess("Linear got successfully authorized for Tech Flow")
+    );
     navigateTo("/dashboard");
   } catch (error) {
     console.error("Failed to fetch Linear data:", error);
@@ -294,28 +297,34 @@ export function* updateLinearTaskSaga(action: {
       ...action.payload,
       accessToken: state.auth.access_token || getCookie("linearAccessToken"),
     });
+    if (data.data.success) {
+      yield put(updateTaskSuccess(data.data.success));
+      yield put(
+        setToastSuccess(
+          "Successfully Updated the Task on Linear and logged the same"
+        )
+      );
+      const logData = {
+        team_id: state.user.teamId,
+        task_id: action.payload.taskId,
+        log_type: "TASK_UPDATED" as const,
+        details: {
+          title: currentTask?.title,
+          prevAssignee: getCurrentAssigneeName(currentTask?.assignee ?? ""),
+          newAssignee: getCurrentAssigneeName(action.payload.assigneeId),
+          prevStatus: getStatusName(currentTask?.status ?? ""),
+          newStatus: getStatusName(action?.payload?.status),
+          prevDescription: currentTask?.description,
+          newDescription: action.payload.description,
+          updatedAt: new Date().toISOString(),
+        },
+      };
 
-    yield put(updateTaskSuccess(data.data.success));
-
-    const logData = {
-      team_id: state.user.teamId,
-      task_id: action.payload.taskId,
-      log_type: "TASK_UPDATED" as const,
-      details: {
-        title: currentTask?.title,
-        prevAssignee: getCurrentAssigneeName(currentTask?.assignee ?? ""),
-        newAssignee: getCurrentAssigneeName(action.payload.assigneeId),
-        prevStatus: getStatusName(currentTask?.status ?? ""),
-        newStatus: getStatusName(action?.payload?.status),
-        prevDescription: currentTask?.description,
-        newDescription: action.payload.description,
-        updatedAt: new Date().toISOString(),
-      },
-    };
-
-    yield call(() => loggingService.createLog(logData));
+      yield call(() => loggingService.createLog(logData));
+    }
   } catch (error) {
     console.error("Failed to update task:", error);
+    yield put(setToastFailure("Failed to update the Task"));
   }
 }
 
