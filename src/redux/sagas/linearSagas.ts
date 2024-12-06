@@ -295,6 +295,15 @@ export function* fetchDataFromLinear() {
       teamId,
       accessToken,
     });
+    const teamresponse = yield call(
+      axios.post,
+      `${API_BASE_URL}/team-members`,
+      {
+        teamId,
+        accessToken,
+      }
+    );
+    yield put(setTeamMembers(teamresponse.data.data));
     if (response.data.success) {
       const formattedWorkflowStates = Object.entries(response.data.states).map(
         ([id, value]) => ({

@@ -134,15 +134,27 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
         className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 cursor-pointer"
         onClick={() => setIsModalOpen(true)}
       >
-        <h3 className="text-xl font-semibold text-gray-800 mb-2">
-          {task.title}
-        </h3>
+        <div className="flex justify-between items-center mb-2">
+          <h3 className="text-xl font-semibold text-gray-800">{task.title}</h3>
+          <span className="text-sm font-semibold text-gray-600 bg-gray-200 px-2 py-1 rounded">
+            {statusOfTask}
+          </span>
+        </div>
+
         <p className="text-gray-600 mb-4 line-clamp-5">{description}</p>
+
         <div className="flex items-center text-blue-600">
           <Calendar size={16} className="mr-2" />
           <span className="text-sm">
             Due Date - {dueDate ? formatDate(dueDate) : "No due date"}
           </span>
+          <div className="flex items-center ml-4">
+            <User size={18} className="mr-2" />
+            <span className="text-sm">
+              {teamMembersList.find((member) => member.id === selectedAssignee)
+                ?.name || "Unassigned"}
+            </span>
+          </div>
         </div>
       </div>
 
