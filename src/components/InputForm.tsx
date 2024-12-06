@@ -4,7 +4,6 @@ import { Lightbulb, Layers, Calendar, Clock, Loader2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/reducer";
 import { navigateTo } from "../redux/navigate";
-import { redirect } from "react-router-dom";
 
 const InputForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -25,9 +24,10 @@ const InputForm: React.FC = () => {
 
   useEffect(() => {
     if (!access_token) {
-      redirect("/login");
+      navigateTo("/login");
     }
-  }, []);
+  }, [navigateTo]);
+
   const dispatch = useDispatch();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

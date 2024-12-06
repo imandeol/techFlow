@@ -30,11 +30,11 @@ const TaskBoard: React.FC = () => {
 
   useEffect(() => {
     if (!access_token) {
-      redirect("/login");
+      navigateTo("/login");
     } else {
       fetchLinearTeamTasks();
     }
-  }, []);
+  }, [navigateTo]);
 
   useEffect(() => {
     if (issues && issues.length >= 0) {

@@ -5,7 +5,7 @@ import { loggingService, TaskLog } from "../services/loggingService";
 import { format, parseISO } from "date-fns";
 import { Loader2 } from "lucide-react";
 import { RootState } from "../redux/reducer";
-import { redirect } from "react-router-dom";
+import { navigateTo } from "../redux/navigate";
 
 interface GroupedLogs {
   [date: string]: TaskLog[];
@@ -20,9 +20,9 @@ export function ViewLogs() {
 
   useEffect(() => {
     if (!access_token) {
-      redirect("/login");
+      navigateTo("/login");
     }
-  }, []);
+  }, [navigateTo]);
 
   useEffect(() => {
     const fetchLogs = async () => {
