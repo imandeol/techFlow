@@ -11,6 +11,8 @@ export interface Task {
   description: string;
   dueDate: string;
   daysRequired: number;
+  assignee: string | null;
+  status: string;
 }
 
 export interface AuthState {

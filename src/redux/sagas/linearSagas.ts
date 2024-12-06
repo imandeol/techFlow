@@ -10,6 +10,7 @@ import {
   RESET_FORM,
   setUserDetails,
   storeTasks,
+  UPDATE_LINEAR_TASK,
   UPDATE_RESPONSE,
 } from "../actions";
 import { navigateTo } from "../navigate";
@@ -20,6 +21,9 @@ import { clearSpecificCookie, getCookie } from "../../utils";
 import { configs } from "../../../config";
 import store from "../store";
 import { loggingService } from "../../services/loggingService";
+import { setTeamMembers } from "../reducers/teamReducer";
+import { updateTaskSuccess } from "../reducers/updateTaskReducer";
+import { setWorkflowStates } from "../reducers/workflowstateReducer";
 
 const API_BASE_URL = "https://tech-flow-backend.vercel.app/api";
 
@@ -30,6 +34,7 @@ export function* watchActionRequests() {
   yield takeLatest(LOGIN, fetchDataAfterLogin);
   yield takeLatest(LOGIN_REQUEST, startOAuthSaga);
   yield takeLatest(HANDLE_CALLBACK, handleCallbackSaga);
+  yield takeLatest(UPDATE_LINEAR_TASK, updateLinearTaskSaga);
 }
 
 export function* createTasksFromGroq(action: {
@@ -63,8 +68,9 @@ export function* createTasksFromGroq(action: {
 
   try {
     const state = store.getState();
-    const { teamId } = state.user;
-    const accessToken = state.auth.access_token;
+    const teamId = state.user.teamId || localStorage.getItem("teamId");
+    const accessToken =
+      state.auth.access_token || getCookie("linearAccessToken");
     //@ts-ignore
     const response = yield call(axios.post, `${API_BASE_URL}/create`, {
       tasks,
@@ -77,19 +83,19 @@ export function* createTasksFromGroq(action: {
         const logData = {
           team_id: teamId,
           task_id: task.id, // Now using our generated ID
-          log_type: 'TASK_CREATED' as const,
+          log_type: "TASK_CREATED" as const,
           details: {
             title: task.title,
             description: task.description,
             dueDate: task.dueDate,
             daysRequired: task.daysRequired,
-            id: task.id
-          }
+            id: task.id,
+          },
         };
-        
+
         yield call(() => loggingService.createLog(logData));
       }
-            yield call(navigateTo, "/");
+      yield call(navigateTo, "/");
       yield put(
         setToastSuccess("Successfully created Tasks for your App Idea")
       );
@@ -106,40 +112,49 @@ export function* handleLogOut() {
   try {
     // Get access token from state
     const state = store.getState();
-    const accessToken =  getCookie("linearAccessToken")
+    const accessToken = getCookie("linearAccessToken");
 
     console.log("ACCTOK>>>>", state, getCookie("linearAccessToken"));
 
     if (getCookie("linearAccessToken")) {
-      yield call(axios.post, 'https://api.linear.app/oauth/revoke', {
-        token: accessToken
-      }, {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
+      yield call(
+        axios.post,
+        "https://api.linear.app/oauth/revoke",
+        {
+          token: accessToken,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
-      });
+      );
     }
 
     yield call(clearSpecificCookie, "linearAccessToken");
     localStorage.removeItem("teamId");
-    localStorage.removeItem('hasLoggedInLinear');
-    window.open('https://linear.app/logout', '_blank');
+    localStorage.removeItem("hasLoggedInLinear");
+    window.open("https://linear.app/logout", "_blank");
     yield call(navigateTo, "/");
   } catch (error) {
-    console.error('Logout error:', error);
+    console.error("Logout error:", error);
     yield call(clearSpecificCookie, "linearAccessToken");
     localStorage.removeItem("teamId");
-    localStorage.removeItem('hasLoggedInLinear');
+    localStorage.removeItem("hasLoggedInLinear");
     yield call(navigateTo, "/");
   }
 }
 
 function* startOAuthSaga() {
   const { linearClientId, redirectUri } = configs;
-  
+
   // First, direct users to authenticate with Linear
-  const oauth_url = `https://linear.app/oauth/authorize?client_id=${linearClientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=read,write,admin`;
-  window.location.href = `https://linear.app/login?redirectTo=${encodeURIComponent(oauth_url)}`;
+  const oauth_url = `https://linear.app/oauth/authorize?client_id=${linearClientId}&redirect_uri=${encodeURIComponent(
+    redirectUri
+  )}&response_type=code&scope=read,write,admin`;
+  window.location.href = `https://linear.app/login?redirectTo=${encodeURIComponent(
+    oauth_url
+  )}`;
 }
 
 function* handleCallbackSaga(action: AuthActionTypes) {
@@ -181,7 +196,9 @@ function* handleCallbackSaga(action: AuthActionTypes) {
   } catch (error) {
     console.error(error);
     const { linearClientId, redirectUri } = configs;
-    window.location.href= `https://linear.app/oauth/authorize?client_id=${linearClientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=read,write,admin`;
+    window.location.href = `https://linear.app/oauth/authorize?client_id=${linearClientId}&redirect_uri=${encodeURIComponent(
+      redirectUri
+    )}&response_type=code&scope=read,write,admin`;
   }
 }
 
@@ -192,14 +209,15 @@ export function* fetchDataAfterLogin(action: {
   try {
     const data = yield call(
       axios.post,
-      `${API_BASE_URL}/getLinearData`,
-      //"http://localhost:3000/api/getLinearData",
+      // `${API_BASE_URL}/getLinearData`,
+      "http://localhost:3000/api/getLinearData",
       {
         accessToken: action.payload,
       }
     );
     const { user, teamId } = data.data;
     localStorage.setItem("teamId", teamId);
+    localStorage.setItem("user", JSON.stringify(user));
     yield put(setUserDetails(user, teamId));
     navigateTo("/dashboard");
   } catch (error) {
@@ -226,7 +244,7 @@ export function* fetchDataFromLinearAndCreateLogs() {
         const logData = {
           team_id: teamId,
           task_id: task.id, // Linear provided ID
-          log_type: 'TASK_CREATED' as const,
+          log_type: "TASK_CREATED" as const,
           details: {
             title: task.title,
             description: task.description,
@@ -235,10 +253,10 @@ export function* fetchDataFromLinearAndCreateLogs() {
             priority: task.priority,
             assignee: task.assignee,
             createdAt: task.createdAt,
-            updatedAt: task.updatedAt
-          }
+            updatedAt: task.updatedAt,
+          },
         };
-        
+
         yield call(() => loggingService.createLog(logData));
       }
     } else {
@@ -252,6 +270,32 @@ export function* fetchDataFromLinearAndCreateLogs() {
   }
 }
 
+export function* updateLinearTaskSaga(action: {
+  type: typeof UPDATE_LINEAR_TASK;
+  payload: {
+    taskId: string;
+    assigneeId: string | null;
+    status: string;
+    dueDate: string;
+    description: string;
+  };
+}) {
+  try {
+    const state = store.getState();
+    const data = yield call(
+      axios.post,
+      // `${API_BASE_URL}/getLinearData`,
+      "http://localhost:3000/api/updateTask",
+      {
+        ...action.payload,
+        accessToken: state.auth.access_token || getCookie("linearAccessToken"),
+      }
+    );
+    yield put(updateTaskSuccess(data.data.success));
+  } catch (error) {
+    console.error("Failed to fetch Linear data:", error);
+  }
+}
 
 export function* fetchDataFromLinear() {
   try {
@@ -259,13 +303,30 @@ export function* fetchDataFromLinear() {
     const teamId = state.user.teamId || localStorage.getItem("teamId");
     const accessToken = state.auth.access_token;
     //@ts-ignore
-    const response = yield call(axios.post, `${API_BASE_URL}/fetch`, {
+    const response = yield call(axios.post, "http://localhost:3000/api/fetch", {
+      // `${API_BASE_URL}/fetch`,{
       teamId,
       accessToken,
     });
-    //"http://localhost:3000/api/fetch"
+    const teamresponse = yield call(
+      axios.post,
+      "http://localhost:3000/api/team-members",
+      {
+        // `${API_BASE_URL}/fetch`,{
+        teamId,
+        accessToken,
+      }
+    );
+    yield put(setTeamMembers(teamresponse.data.data));
     if (response.data.success) {
-      yield put(storeTasks(response.data.data));
+      const formattedWorkflowStates = Object.entries(response.data.states).map(
+        ([id, value]) => ({
+          id,
+          value,
+        })
+      );
+      yield put(setWorkflowStates(formattedWorkflowStates));
+      yield put(storeTasks([...response.data.data]));
     } else {
       console.error("Error fetching tasks:", response.data.error);
     }

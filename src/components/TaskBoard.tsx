@@ -6,7 +6,6 @@ import { LayoutGrid, Loader, Plus } from "lucide-react";
 import TaskCard from "./TaskCard";
 import { navigateTo } from "../redux/navigate";
 import { Task } from "../types";
-import { getCookie } from "../utils";
 
 const TaskBoard: React.FC = () => {
   const dispatch = useDispatch();
@@ -71,7 +70,6 @@ const TaskBoard: React.FC = () => {
 
     const startIndex = (currentPage - 1) * issuesPerPage;
     const endIndex = startIndex + issuesPerPage;
-
     if (issues) {
       const currentPageIssues = issues.slice(startIndex, endIndex);
       return (
