@@ -14,6 +14,29 @@ export const LOGOUT = "auth/LOGOUT";
 export const LOGIN = "auth/LOGIN";
 export const SET_USER_DETAILS = "SET_USER_DETAILS";
 export const HANDLE_CALLBACK = "HANDLE_CALLBACK";
+export const UPDATE_LINEAR_TASK = "UPDATE LINEAR TASK";
+
+export interface UpdateLinearTaskAction {
+  type: typeof UPDATE_LINEAR_TASK;
+  payload: {
+    taskId: string;
+    assigneeId: string | null;
+    status: string;
+    dueDate: string;
+    description: string;
+  };
+}
+
+export const updateLinearTask = (task: {
+  taskId: string;
+  assigneeId: string | null;
+  status: string;
+  dueDate: string;
+  description: string;
+}): UpdateLinearTaskAction => ({
+  type: UPDATE_LINEAR_TASK,
+  payload: task,
+});
 
 export interface HandleCallbackAction {
   type: typeof HANDLE_CALLBACK;

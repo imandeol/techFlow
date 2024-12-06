@@ -10,15 +10,19 @@ import {
   RESET_FORM,
   setUserDetails,
   storeTasks,
+  UPDATE_LINEAR_TASK,
   UPDATE_RESPONSE,
 } from "../actions";
 import { navigateTo } from "../navigate";
 import axios from "axios";
 import { setToastFailure, setToastSuccess } from "../reducers/toastReducer";
-import { clearSpecificCookie } from "../../utils";
+import { clearSpecificCookie, getCookie } from "../../utils";
 //@ts-ignore
 import { configs } from "../../../config";
 import store from "../store";
+import { setTeamMembers } from "../reducers/teamReducer";
+import { updateTaskSuccess } from "../reducers/updateTaskReducer";
+import { setWorkflowStates } from "../reducers/workflowstateReducer";
 
 const API_BASE_URL = "https://tech-flow-backend.vercel.app/api";
 
@@ -29,6 +33,7 @@ export function* watchActionRequests() {
   yield takeLatest(LOGIN, fetchDataAfterLogin);
   yield takeLatest(LOGIN_REQUEST, startOAuthSaga);
   yield takeLatest(HANDLE_CALLBACK, handleCallbackSaga);
+  yield takeLatest(UPDATE_LINEAR_TASK, updateLinearTaskSaga);
 }
 
 export function* createTasksFromGroq(action: {
@@ -56,8 +61,9 @@ export function* createTasksFromGroq(action: {
 
   try {
     const state = store.getState();
-    const { teamId } = state.user;
-    const accessToken = state.auth.access_token;
+    const teamId = state.user.teamId || localStorage.getItem("teamId");
+    const accessToken =
+      state.auth.access_token || getCookie("linearAccessToken");
     //@ts-ignore
     const response = yield call(axios.post, `${API_BASE_URL}/create`, {
       tasks,
@@ -140,16 +146,44 @@ export function* fetchDataAfterLogin(action: {
   try {
     const data = yield call(
       axios.post,
-      `${API_BASE_URL}/getLinearData`,
-      //"http://localhost:3000/api/getLinearData",
+      // `${API_BASE_URL}/getLinearData`,
+      "http://localhost:3000/api/getLinearData",
       {
         accessToken: action.payload,
       }
     );
     const { user, teamId } = data.data;
     localStorage.setItem("teamId", teamId);
+    localStorage.setItem("user", JSON.stringify(user));
     yield put(setUserDetails(user, teamId));
     navigateTo("/dashboard");
+  } catch (error) {
+    console.error("Failed to fetch Linear data:", error);
+  }
+}
+
+export function* updateLinearTaskSaga(action: {
+  type: typeof UPDATE_LINEAR_TASK;
+  payload: {
+    taskId: string;
+    assigneeId: string | null;
+    status: string;
+    dueDate: string;
+    description: string;
+  };
+}) {
+  try {
+    const state = store.getState();
+    const data = yield call(
+      axios.post,
+      // `${API_BASE_URL}/getLinearData`,
+      "http://localhost:3000/api/updateTask",
+      {
+        ...action.payload,
+        accessToken: state.auth.access_token || getCookie("linearAccessToken"),
+      }
+    );
+    yield put(updateTaskSuccess(data.data.success));
   } catch (error) {
     console.error("Failed to fetch Linear data:", error);
   }
@@ -161,13 +195,30 @@ export function* fetchDataFromLinear() {
     const teamId = state.user.teamId || localStorage.getItem("teamId");
     const accessToken = state.auth.access_token;
     //@ts-ignore
-    const response = yield call(axios.post, `${API_BASE_URL}/fetch`, {
+    const response = yield call(axios.post, "http://localhost:3000/api/fetch", {
+      // `${API_BASE_URL}/fetch`,{
       teamId,
       accessToken,
     });
-    //"http://localhost:3000/api/fetch"
+    const teamresponse = yield call(
+      axios.post,
+      "http://localhost:3000/api/team-members",
+      {
+        // `${API_BASE_URL}/fetch`,{
+        teamId,
+        accessToken,
+      }
+    );
+    yield put(setTeamMembers(teamresponse.data.data));
     if (response.data.success) {
-      yield put(storeTasks(response.data.data));
+      const formattedWorkflowStates = Object.entries(response.data.states).map(
+        ([id, value]) => ({
+          id,
+          value,
+        })
+      );
+      yield put(setWorkflowStates(formattedWorkflowStates));
+      yield put(storeTasks([...response.data.data]));
     } else {
       console.error("Error fetching tasks:", response.data.error);
     }
