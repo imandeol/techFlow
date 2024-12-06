@@ -3,6 +3,7 @@ import {
   ChevronLeft,
   ChevronRight,
   LayoutDashboard,
+  ClipboardList,
 } from "lucide-react";
 import { useSidebar } from "./SidebarContext";
 import { NavigationItem } from "./NavigationItem";
@@ -48,6 +49,13 @@ export function Sidebar() {
           label="Task Board"
           onClick={() => {
             navigateTo("/dashboard");
+          }}
+        />
+         <NavigationItem
+          icon={ClipboardList}
+          label="View Logs"
+          onClick={() => {
+            navigateTo("/logs");
           }}
         />
       </div>
