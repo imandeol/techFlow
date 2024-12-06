@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import { Mail, User } from "lucide-react";
+import { User } from "lucide-react";
 import { RootState } from "../redux/reducer";
 import { useSelector } from "react-redux";
-import { navigateTo } from "../redux/navigate";
+import { redirect } from "react-router-dom";
 
 const TeamTab: React.FC = () => {
   const teamMembers = useSelector(
@@ -13,7 +13,7 @@ const TeamTab: React.FC = () => {
 
   useEffect(() => {
     if (!access_token) {
-      navigateTo("/login");
+      redirect("/login");
     }
   }, []);
 

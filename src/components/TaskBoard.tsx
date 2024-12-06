@@ -6,6 +6,7 @@ import { LayoutGrid, Loader, Plus } from "lucide-react";
 import TaskCard from "./TaskCard";
 import { navigateTo } from "../redux/navigate";
 import { Task } from "../types";
+import { redirect } from "react-router-dom";
 
 const TaskBoard: React.FC = () => {
   const dispatch = useDispatch();
@@ -29,7 +30,7 @@ const TaskBoard: React.FC = () => {
 
   useEffect(() => {
     if (!access_token) {
-      navigateTo("/login");
+      redirect("/login");
     } else {
       fetchLinearTeamTasks();
     }
