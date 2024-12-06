@@ -2,7 +2,6 @@ import { createClient } from "@supabase/supabase-js";
 //@ts-ignore
 import { configs } from "../../config";
 
-console.log("configs", configs);
 const supabase = createClient(
   "https://sbtwpkizmnbuekhgqbit.supabase.co",
   configs.supabaseKey

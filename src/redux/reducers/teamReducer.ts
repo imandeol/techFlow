@@ -7,7 +7,7 @@ interface TeamState {
 }
 
 const initialState: TeamState = {
-  members: [],
+  members: JSON.parse(localStorage.getItem("teamMembers")) || [],
 };
 
 const SET_TEAM_MEMBERS = "SET_TEAM_MEMBERS";

@@ -77,7 +77,6 @@ export function* createTasksFromGroq(action: {
       teamId,
       accessToken,
     });
-    //`http://localhost:3000/api/create`, {
     if (response.data.success) {
       for (const task of tasks) {
         const logData = {
@@ -110,11 +109,8 @@ export function* createTasksFromGroq(action: {
 
 export function* handleLogOut() {
   try {
-    // Get access token from state
-    const state = store.getState();
-    const accessToken = getCookie("linearAccessToken");
-
-    console.log("ACCTOK>>>>", state, getCookie("linearAccessToken"));
+    const accessToken =
+      store.getState().auth.access_token || getCookie("linearAccessToken");
 
     if (getCookie("linearAccessToken")) {
       yield call(
@@ -134,6 +130,7 @@ export function* handleLogOut() {
     yield call(clearSpecificCookie, "linearAccessToken");
     localStorage.removeItem("teamId");
     localStorage.removeItem("hasLoggedInLinear");
+    localStorage.removeItem("user");
     window.open("https://linear.app/logout", "_blank");
     yield call(navigateTo, "/");
   } catch (error) {
@@ -210,7 +207,9 @@ export function* fetchDataAfterLogin(action: {
     const data = yield call(axios.post, `${API_BASE_URL}/getLinearData`, {
       accessToken: action.payload,
     });
-    const { user, teamId } = data.data;
+    const { user, teamId, teamMembers } = data.data;
+    localStorage.setItem("teamMembers", JSON.stringify(teamMembers));
+    yield put(setTeamMembers(teamMembers));
     localStorage.setItem("teamId", teamId);
     localStorage.setItem("user", JSON.stringify(user));
     yield put(setUserDetails(user, teamId));
@@ -296,15 +295,6 @@ export function* fetchDataFromLinear() {
       teamId,
       accessToken,
     });
-    const teamresponse = yield call(
-      axios.post,
-      `${API_BASE_URL}/team-members`,
-      {
-        teamId,
-        accessToken,
-      }
-    );
-    yield put(setTeamMembers(teamresponse.data.data));
     if (response.data.success) {
       const formattedWorkflowStates = Object.entries(response.data.states).map(
         ([id, value]) => ({

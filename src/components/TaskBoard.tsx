@@ -28,7 +28,6 @@ const TaskBoard: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    console.log(access_token)
     if (!access_token) {
       navigateTo("/login");
     } else {

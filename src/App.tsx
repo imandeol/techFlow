@@ -12,6 +12,7 @@ import { Layout } from "./components/Layout";
 import { SidebarProvider } from "./components/SidebarContext";
 import CallbackHandler from "./components/CallbackHandler";
 import { ViewLogs } from "./components/ViewLogs";
+import TeamTab from "./components/TeamTab";
 
 function App() {
   const navigate = useNavigate();
@@ -64,7 +65,14 @@ function App() {
     <SidebarProvider>
       <Toaster position="top-right" />
       <Routes>
-        <Route path="/" element={<LoginPage />} />
+        <Route
+          path="/"
+          element={
+            <Layout>
+              <TaskBoard />
+            </Layout>
+          }
+        />
         <Route path="/callback" element={<CallbackHandler />} />
         <Route path="/login" element={<LoginPage />} />
         <Route
@@ -72,6 +80,14 @@ function App() {
           element={
             <Layout>
               <ViewLogs />
+            </Layout>
+          }
+        />
+        <Route
+          path="/team"
+          element={
+            <Layout>
+              <TeamTab />
             </Layout>
           }
         />

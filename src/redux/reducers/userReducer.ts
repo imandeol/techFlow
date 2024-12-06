@@ -2,8 +2,8 @@ import { UserState } from "../../types";
 import { UserActionTypes, SET_USER_DETAILS } from "../actions";
 
 const initialState: UserState = {
-  user: null,
-  teamId: null,
+  user: JSON.parse(localStorage.getItem("user")) || null,
+  teamId: localStorage.getItem("teamId") || null,
 };
 
 export const userReducer = (
