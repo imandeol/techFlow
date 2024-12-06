@@ -10,8 +10,6 @@ export function LoginPage() {
   const dispatch: Dispatch<AuthActionTypes> = useDispatch();
   const { access_token } = useSelector((state: RootState) => state.auth);
 
-  
-
   useEffect(() => {
     if (access_token) {
       navigateTo("/dashboard");
@@ -44,6 +42,17 @@ export function LoginPage() {
             }}
           >
             <LogIn className="w-5 h-5 mr-2" />
+            Authorize Linear on Tech Flow
+          </button>
+        </div>
+
+        <div className="space-y-4">
+          <button
+            className="w-full flex items-center justify-center px-4 py-2 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+            onClick={() => {
+              window.open("https://linear.app/login", "_blank");
+            }}
+          >
             Login with Linear
           </button>
         </div>
