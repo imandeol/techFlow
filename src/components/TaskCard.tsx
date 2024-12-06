@@ -3,8 +3,7 @@ import { Calendar, Edit2, User, X, Loader2 } from "lucide-react";
 import { Task } from "../types";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/reducer";
-import { updateLinearTask, UpdateLinearTaskAction } from "../redux/actions";
-import { Dispatch } from "@reduxjs/toolkit";
+import { updateLinearTask } from "../redux/actions";
 import { updateTaskSuccess } from "../redux/reducers/updateTaskReducer";
 
 function formatDate(dateString: string): string {
@@ -55,7 +54,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
   React.useEffect(() => {
     if (
       !task.assignee &&
-      !teamMembersList.some((member) => member.id === "")
+      !teamMembersList?.some((member) => member.id === "")
     ) {
       setTeamMembersList([
         {
@@ -97,7 +96,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
         assigneeId: selectedAssignee,
         description,
         status:
-          taskStatusValues.find((status) => status.value === statusOfTask)
+          taskStatusValues?.find((status) => status.value === statusOfTask)
             ?.id || "",
         dueDate: dueDate,
       })
@@ -154,7 +153,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
           <div className="flex items-center ml-4">
             <User size={18} className="mr-2" />
             <span className="text-sm">
-              {teamMembersList.find((member) => member.id === selectedAssignee)
+              {teamMembersList?.find((member) => member.id === selectedAssignee)
                 ?.name || "Unassigned"}
             </span>
           </div>
@@ -215,7 +214,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                         autoFocus
                         disabled={isSaving}
                       >
-                        {teamMembersList.map((member) => (
+                        {teamMembersList?.map((member) => (
                           <option key={member.id} value={member.id}>
                             {member.name}
                           </option>
@@ -224,7 +223,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                     ) : (
                       <EditableField
                         value={
-                          teamMembersList.find(
+                          teamMembersList?.find(
                             (member) => member.id === selectedAssignee
                           )?.name || ""
                         }
@@ -241,7 +240,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                     autoFocus
                     disabled={isSaving}
                   >
-                    {taskStatusValues.map((status) => (
+                    {taskStatusValues?.map((status) => (
                       <option key={status.id} value={status.value}>
                         {status.value}
                       </option>

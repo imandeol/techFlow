@@ -94,7 +94,7 @@ export function* createTasksFromGroq(action: {
 
         yield call(() => loggingService.createLog(logData));
       }
-      yield call(navigateTo, "/");
+      yield call(navigateTo, "/dashboard");
       yield put(
         setToastSuccess("Successfully created Tasks for your App Idea")
       );
@@ -273,14 +273,16 @@ export function* updateLinearTaskSaga(action: {
 }) {
   try {
     const state = store.getState();
-    const currentTask = state?.tasks?.issues?.find((task: any) => task.id === action.payload.taskId);
+    const currentTask = state?.tasks?.issues?.find(
+      (task: any) => task.id === action.payload.taskId
+    );
     const workflowStates = state?.workflow?.workflowStates;
-    const teamMembers = JSON.parse(localStorage.getItem('teamMembers') || '[]');
-    
+    const teamMembers = JSON.parse(localStorage.getItem("teamMembers") || "[]");
+
     const getCurrentAssigneeName = (id: string | null) => {
-      if (!id) return 'Unassigned';
+      if (!id) return "Unassigned";
       const member = teamMembers?.find((m: any) => m.id === id);
-      return member ? member.name : 'Unassigned';
+      return member ? member.name : "Unassigned";
     };
 
     const getStatusName = (statusId: string) => {
@@ -292,25 +294,25 @@ export function* updateLinearTaskSaga(action: {
       ...action.payload,
       accessToken: state.auth.access_token || getCookie("linearAccessToken"),
     });
-    
+
     yield put(updateTaskSuccess(data.data.success));
 
     const logData = {
       team_id: state.user.teamId,
       task_id: action.payload.taskId,
-      log_type: 'TASK_UPDATED' as const,
+      log_type: "TASK_UPDATED" as const,
       details: {
         title: currentTask?.title,
-        prevAssignee: getCurrentAssigneeName(currentTask?.assignee ?? ''),
+        prevAssignee: getCurrentAssigneeName(currentTask?.assignee ?? ""),
         newAssignee: getCurrentAssigneeName(action.payload.assigneeId),
-        prevStatus: getStatusName(currentTask?.status ?? ''),
+        prevStatus: getStatusName(currentTask?.status ?? ""),
         newStatus: getStatusName(action?.payload?.status),
         prevDescription: currentTask?.description,
         newDescription: action.payload.description,
-        updatedAt: new Date().toISOString()
-      }
+        updatedAt: new Date().toISOString(),
+      },
     };
-    
+
     yield call(() => loggingService.createLog(logData));
   } catch (error) {
     console.error("Failed to update task:", error);

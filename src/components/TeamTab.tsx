@@ -26,7 +26,6 @@ const TeamTab: React.FC = () => {
           <h1 className="text-3xl font-bold text-gray-900">Team Members</h1>
         </div>
 
-        {/* Team Members Grid */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {teamMembers.map((member) => (
             <div
