@@ -129,15 +129,14 @@ export function* handleLogOut() {
 
     yield call(clearSpecificCookie, "linearAccessToken");
     localStorage.removeItem("teamId");
-    localStorage.removeItem("hasLoggedInLinear");
     localStorage.removeItem("user");
+    localStorage.removeItem("teamMembers");
     window.open("https://linear.app/logout", "_blank");
     yield call(navigateTo, "/");
   } catch (error) {
     console.error("Logout error:", error);
     yield call(clearSpecificCookie, "linearAccessToken");
     localStorage.removeItem("teamId");
-    localStorage.removeItem("hasLoggedInLinear");
     yield call(navigateTo, "/");
   }
 }
