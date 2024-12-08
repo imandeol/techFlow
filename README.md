@@ -1,53 +1,99 @@
 # TechFlow App
 
-**TechFlow** is a project management web application that streamlines the task creation and management process for tech project ideas. The app provides an interactive interface for users to submit their project ideas and automatically generates organized tasks, helping development teams manage workflows effectively with integrations to **Linear**.
+**TechFlow** is a project management web application that streamlines the task creation and management process for tech projects. It allows users to submit project ideas, automatically generate structured tasks, and integrates directly with **Linear** for effective workflow management. Additionally, TechFlow enables users to update tasks, view an activity log, and securely manage their session with Linear.
 
-## MVP (Minimum Viable Product)
+## Key Features
 
-### Key Features:
+1. **Login & Authorization**
 
-1. **Task Board**:
+   - **Login Page**: When users first visit TechFlow, they are prompted to log in to their Linear account.
+   - **Authorization**: After signing in through Linear (in a new browser tab), users return to the TechFlow tab to authorize access, allowing TechFlow to manage tasks on their behalf.
 
-   - When users land on TechFlow for the first time, a **Task Board** is shown featuring a **"Create New Task"** box.
-   - This box serves as a starting point for users to navigate to the input form.
+2. **Task Board**
 
-2. **Create New Task**:
+   - **Overview**: Once authorized, users see a **Task Board** displaying all existing tasks.
+   - **Quick Task Creation**: A **"Create New Task"** box lets users easily open the task creation form.
 
-   - Clicking on the **Create New Task** box takes the user to an **Input Form** where they can fill in essential details about their project idea, including:
-     - **App Idea**: A brief description of the application to be developed.
-     - **Main Features**: Key functionalities or features that the user wants in the application.
-     - **Tech Stack**: Technologies and tools preferred for development.
-     - **Deadline**: The anticipated deadline for project completion.
+3. **Create New Task**
 
-3. **Task Generation**:
+   - **Input Form**: Users can provide key details about their project:
+     - **App Idea**: A concise description of the application.
+     - **Main Features**: The core functionalities or features requested.
+     - **Tech Stack**: Preferred technologies and tools for development.
+     - **Deadline**: The desired completion date.
 
-   - Upon submitting the form, the input data is sent to the **groq API**, which generates a structured set of tasks based on the user's input.
-   - These generated tasks are then sent to **Linear** for task management and storing tasks for user to work upon in the Backlog.
+4. **Task Generation & Integration**
 
-4. **Task Board Display**:
-   - After submitting the input form, the user is redirected back to the **Task Board**, where they can view all the tasks generated based on their initial input.
-   - Users also have the option to **create additional tasks** directly from the Task Board.
+   - **Automated Task Creation**: On submission, details are sent to the **Groq API**, which generates a structured set of tasks tailored to the user’s inputs.
+   - **Linear Integration**: Generated tasks are automatically sent to **Linear**, where they are added to the Backlog, facilitating centralized and efficient task management.
+
+5. **Task Updates**
+
+   - **Editing Capabilities**: Users can update tasks directly from the Task Board or an individual task view:
+     - **Description**: Modify the summary or instructions for the task.
+     - **Assignee**: Assign or reassign tasks to team members.
+     - **Due Date**: Adjust deadlines as needed.
+     - **Status**: Change the task’s workflow state (e.g., "To Do," "In Progress," "Done").
+
+6. **View Logs**
+
+   - **Activity History**: The **View Logs** tab provides a chronological record of all task-related events, including creation, updates, and status changes.
+   - **Audit & Transparency**: Logs help trace changes, ensuring accountability and ease of troubleshooting.
+
+7. **Logout & Token Revocation**
+   - **Secure Logout**: Users can log out from TechFlow, which revokes the Linear access token and securely logs them out of Linear.
+   - **Privacy & Security**: This ensures user accounts remain protected, preventing unauthorized use of their credentials.
+
+---
 
 ## Tech Stack
 
-The TechFlow app is built with the following technologies:
+- **Frontend**: React + TypeScript (with Redux-Saga for state management)
+- **Backend**: Express.js hosted on Vercel
+- **API Integration**:
+  - **groq API** for generating tasks based on user inputs
+  - **Linear** for task management and storage
 
-- **Frontend**: React+ Typescript (with Redux-Saga for state management)
-- **API Integration**: groq API (for task generation) and Linear (for task management)
-- **Backend**: Express JS hosted on Vercel
+---
 
 ## Usage
 
-1. **Landing on Task Board**:
-   - When the user first arrives at the TechFlow app, they are presented with a **Task Board** featuring a **Create New Task** box.
-2. **Creating a New Task**:
-   - Click on the **Create New Task** box to open the Input Form.
-   - Fill in the details regarding the app idea, features, tech stack, and expected deadline.
-   - Submit the form to generate a set of tasks.
-3. **Viewing Generated Tasks**:
-   - After submitting, the user is redirected back to the Task Board, where they can view the tasks generated by groq API and managed through Linear.
-4. **Adding More Tasks**:
-   - Users can create additional tasks directly from the Task Board using Create New Task feature which again would lead to Input Form.
+1. **Login & Authorize**
+
+1. Navigate to the homepage.
+1. If not logged in, a login prompt will appear.
+1. Follow the instructions to authorize TechFlow with your Linear account.
+
+1. **Create a New Task**
+
+1. Click **"Create New Task"** on the Task Board.
+1. Fill out the form:
+   - **App Idea**: Describe your project idea.
+   - **Main Features**: List the key functionalities.
+   - **Tech Stack**: Specify preferred technologies.
+   - **Deadline**: Set an expected completion date.
+1. Submit the form to generate tasks.
+1. After submission, you will be redirected to the Task Board with the newly generated tasks displayed.
+
+1. **Managing Tasks**
+
+1. Click on any existing task on the Task Board to view or update its details.
+1. Modify:
+   - **Description**
+   - **Assignee**
+   - **Due Date**
+   - **Status** (e.g., "To Do," "In Progress," "Done")
+1. Updates are automatically synced back to Linear.
+
+1. **View Logs**
+
+1. Open the **View Logs** tab.
+1. You can see the history of task events of the team, including creation, updates, and status changes.
+
+1. **Logout**
+
+1. Click **Logout**.
+1. This action revokes your Linear access token and securely logs you out.
 
 ---
 
