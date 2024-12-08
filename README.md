@@ -60,40 +60,40 @@
 
 1. **Login & Authorize**
 
-1. Navigate to the homepage.
-1. If not logged in, a login prompt will appear.
-1. Follow the instructions to authorize TechFlow with your Linear account.
+- Navigate to the homepage.
+- If not logged in, a login prompt will appear.
+- Follow the instructions to authorize TechFlow with your Linear account.
 
-1. **Create a New Task**
+2. **Create a New Task**
 
-1. Click **"Create New Task"** on the Task Board.
-1. Fill out the form:
-   - **App Idea**: Describe your project idea.
-   - **Main Features**: List the key functionalities.
-   - **Tech Stack**: Specify preferred technologies.
-   - **Deadline**: Set an expected completion date.
-1. Submit the form to generate tasks.
-1. After submission, you will be redirected to the Task Board with the newly generated tasks displayed.
+- Click **"Create New Task"** on the Task Board.
+- Fill out the form:
+  - **App Idea**: Describe your project idea.
+  - **Main Features**: List the key functionalities.
+  - **Tech Stack**: Specify preferred technologies.
+  - **Deadline**: Set an expected completion date.
+- Submit the form to generate tasks.
+- After submission, you will be redirected to the Task Board with the newly generated tasks displayed.
 
-1. **Managing Tasks**
+3. **Managing Tasks**
 
-1. Click on any existing task on the Task Board to view or update its details.
-1. Modify:
-   - **Description**
-   - **Assignee**
-   - **Due Date**
-   - **Status** (e.g., "To Do," "In Progress," "Done")
-1. Updates are automatically synced back to Linear.
+- Click on any existing task on the Task Board to view or update its details.
+- Modify:
+  - **Description**
+  - **Assignee**
+  - **Due Date**
+  - **Status** (e.g., "To Do," "In Progress," "Done")
+- Updates are automatically synced back to Linear.
 
-1. **View Logs**
+4. **View Logs**
 
-1. Open the **View Logs** tab.
-1. You can see the history of task events of the team, including creation, updates, and status changes.
+- Open the **View Logs** tab.
+- You can see the history of task events of the team, including creation, updates, and status changes.
 
-1. **Logout**
+5. **Logout**
 
-1. Click **Logout**.
-1. This action revokes your Linear access token and securely logs you out.
+- Click **Logout**.
+- This action revokes your Linear access token and securely logs you out.
 
 ---
 
