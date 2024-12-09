@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { User } from "lucide-react";
 import { RootState } from "../redux/reducer";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { FETCH_DATA_FROM_LINEAR } from "../redux/actions";
 
 const TeamTab: React.FC = () => {
   const teamMembers = useSelector(
@@ -12,11 +13,13 @@ const TeamTab: React.FC = () => {
   const { access_token } = useSelector((state: RootState) => state.auth);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!access_token) {
       navigate("/login");
-    }
+    } else if (teamMembers.length === 0)
+      dispatch({ type: FETCH_DATA_FROM_LINEAR });
   }, [navigate]);
 
   return (
