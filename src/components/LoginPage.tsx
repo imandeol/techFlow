@@ -24,24 +24,6 @@ export function LoginPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center p-4">
       <div className="bg-white rounded-xl shadow-xl p-8 w-full max-w-md">
-        <div className="bg-gray-100 p-4 rounded mb-4">
-          <p className="mt-2 text-sm text-gray-600">Disclaimer:</p>
-          <ul className="text-xs text-gray-600 list-disc list-inside">
-            <li>
-              You would need to login on Linear first, and then comeback to
-              authorize your account on Tech Flow.{" "}
-              <b>
-                Doing this because linear provides authorize token and no login
-                exposure
-              </b>
-            </li>
-            <li>
-              On logout, please follow the same steps mentioned above to sign in
-              again, since app logout also triggers logout from linear.app.
-            </li>
-          </ul>
-        </div>
-
         <div className="flex items-center justify-center mb-2">
           <LogIn className="w-10 h-10 text-blue-600" />
         </div>
