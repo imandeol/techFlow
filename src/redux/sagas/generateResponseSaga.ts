@@ -46,7 +46,7 @@ function* handleUpdateForm(action: any) {
           `,
         },
       ],
-      model: "mixtral-8x7b-32768",
+      model: "meta-llama/llama-4-scout-17b-16e-instruct",
       response_format: { type: "json_object" },
       temperature: 0.3,
       max_tokens: 4096,

@@ -2,10 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 //@ts-ignore
 import { configs } from "../../config";
 
-const supabase = createClient(
-  "https://sbtwpkizmnbuekhgqbit.supabase.co",
-  configs.supabaseKey
-);
+const supabase = createClient(configs.supabaseUrl, configs.supabaseKey);
 export type LogType = "TASK_CREATED" | "TASK_UPDATED";
 
 export interface TaskLog {
