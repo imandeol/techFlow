@@ -20,7 +20,7 @@ import { clearSpecificCookie, getCookie } from "../../utils";
 //@ts-ignore
 import { configs } from "../../../config";
 import store from "../store";
-import { loggingService } from "../../services/loggingService";
+// import { loggingService } from "../../services/loggingService";
 import { setTeamMembers } from "../reducers/teamReducer";
 import { updateTaskSuccess } from "../reducers/updateTaskReducer";
 import { setWorkflowStates } from "../reducers/workflowstateReducer";
@@ -78,22 +78,22 @@ export function* createTasksFromGroq(action: {
       accessToken,
     });
     if (response.data.success) {
-      for (const task of tasks) {
-        const logData = {
-          team_id: teamId,
-          task_id: task.id, // Now using our generated ID
-          log_type: "TASK_CREATED" as const,
-          details: {
-            title: task.title,
-            description: task.description,
-            dueDate: task.dueDate,
-            daysRequired: task.daysRequired,
-            id: task.id,
-          },
-        };
+      // for (const task of tasks) {
+      //   const logData = {
+      //     team_id: teamId,
+      //     task_id: task.id, // Now using our generated ID
+      //     log_type: "TASK_CREATED" as const,
+      //     details: {
+      //       title: task.title,
+      //       description: task.description,
+      //       dueDate: task.dueDate,
+      //       daysRequired: task.daysRequired,
+      //       id: task.id,
+      //     },
+      //   };
 
-        yield call(() => loggingService.createLog(logData));
-      }
+      //   yield call(() => loggingService.createLog(logData));
+      // }
       yield call(navigateTo, "/dashboard");
       yield put(
         setToastSuccess("Successfully created Tasks for your App Idea")
@@ -230,28 +230,28 @@ export function* fetchDataFromLinearAndCreateLogs() {
       accessToken,
     });
     if (response.data.success) {
-      yield put(storeTasks(response.data.data));
       const tasks = response.data.data;
+      yield put(storeTasks(tasks));
       // Log each task after fetching
-      for (const task of tasks) {
-        const logData = {
-          team_id: teamId,
-          task_id: task.id, // Linear provided ID
-          log_type: "TASK_CREATED" as const,
-          details: {
-            title: task.title,
-            description: task.description,
-            state: task.state,
-            id: task.id,
-            priority: task.priority,
-            assignee: task.assignee,
-            createdAt: task.createdAt,
-            updatedAt: task.updatedAt,
-          },
-        };
+      // for (const task of tasks) {
+      //   const logData = {
+      //     team_id: teamId,
+      //     task_id: task.id, // Linear provided ID
+      //     log_type: "TASK_CREATED" as const,
+      //     details: {
+      //       title: task.title,
+      //       description: task.description,
+      //       state: task.state,
+      //       id: task.id,
+      //       priority: task.priority,
+      //       assignee: task.assignee,
+      //       createdAt: task.createdAt,
+      //       updatedAt: task.updatedAt,
+      //     },
+      //   };
 
-        yield call(() => loggingService.createLog(logData));
-      }
+      //   yield call(() => loggingService.createLog(logData));
+      // }
     } else {
       console.error("Error fetching tasks:", response.data.error);
     }
@@ -303,23 +303,23 @@ export function* updateLinearTaskSaga(action: {
           "Successfully Updated the Task on Linear and logged the same"
         )
       );
-      const logData = {
-        team_id: state.user.teamId,
-        task_id: action.payload.taskId,
-        log_type: "TASK_UPDATED" as const,
-        details: {
-          title: currentTask?.title,
-          prevAssignee: getCurrentAssigneeName(currentTask?.assignee ?? ""),
-          newAssignee: getCurrentAssigneeName(action.payload.assigneeId),
-          prevStatus: getStatusName(currentTask?.status ?? ""),
-          newStatus: getStatusName(action?.payload?.status),
-          prevDescription: currentTask?.description,
-          newDescription: action.payload.description,
-          updatedAt: new Date().toISOString(),
-        },
-      };
+      // const logData = {
+      //   team_id: state.user.teamId,
+      //   task_id: action.payload.taskId,
+      //   log_type: "TASK_UPDATED" as const,
+      //   details: {
+      //     title: currentTask?.title,
+      //     prevAssignee: getCurrentAssigneeName(currentTask?.assignee ?? ""),
+      //     newAssignee: getCurrentAssigneeName(action.payload.assigneeId),
+      //     prevStatus: getStatusName(currentTask?.status ?? ""),
+      //     newStatus: getStatusName(action?.payload?.status),
+      //     prevDescription: currentTask?.description,
+      //     newDescription: action.payload.description,
+      //     updatedAt: new Date().toISOString(),
+      //   },
+      // };
 
-      yield call(() => loggingService.createLog(logData));
+      // yield call(() => loggingService.createLog(logData));
     }
   } catch (error) {
     console.error("Failed to update task:", error);

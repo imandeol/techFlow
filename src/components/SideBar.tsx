@@ -3,7 +3,7 @@ import {
   ChevronLeft,
   ChevronRight,
   LayoutDashboard,
-  ClipboardList,
+  // ClipboardList,
   Users,
 } from "lucide-react";
 import { useSidebar } from "./SidebarContext";
@@ -52,13 +52,13 @@ export function Sidebar() {
             navigateTo("/dashboard");
           }}
         />
-        <NavigationItem
+        {/* <NavigationItem
           icon={ClipboardList}
           label="View Logs"
           onClick={() => {
             navigateTo("/logs");
           }}
-        />
+        /> */}
         <NavigationItem
           icon={Users}
           label="Team Members"

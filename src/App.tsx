@@ -11,7 +11,7 @@ import { LoginPage } from "./components/LoginPage";
 import { Layout } from "./components/Layout";
 import { SidebarProvider } from "./components/SidebarContext";
 import CallbackHandler from "./components/CallbackHandler";
-import { ViewLogs } from "./components/ViewLogs";
+// import { ViewLogs } from "./components/ViewLogs";
 import TeamTab from "./components/TeamTab";
 
 function App() {
@@ -75,14 +75,14 @@ function App() {
         />
         <Route path="/callback" element={<CallbackHandler />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route
+        {/* <Route
           path="/logs"
           element={
             <Layout>
               <ViewLogs />
             </Layout>
           }
-        />
+        /> */}
         <Route
           path="/team"
           element={
